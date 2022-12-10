@@ -1,0 +1,107 @@
+---
+title: "Week 1:</br>Introduction"
+author: "Visual Data Analytics"
+institute: "University of Sydney"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"../css/mtheme.css","../css/mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      before_body: ../auxil/defs.html
+---
+
+# Outline
+
+-   Why visualisation?
+-   Good and bad visualisation.
+-   Buliding a narrative with visualisation.
+-   Tools for visualisation.
+
+```{r,include=FALSE}
+library(reticulate)
+use_python('~/anaconda3/bin/python3')
+matplotlib<-import('matplotlib')
+matplotlib$use("Agg",force=TRUE)
+knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
+```
+
+---
+
+# Why do we visualise?
+
+-   More than 50% of the brain's neurons dedicated to vision.
+-   Nearly 10 million bits of information are processed per second through our eyes.
+-   Pre-attentive processing decodes information with high accuracy within 250 milliseconds (Healy and Enns, 2012).
+-   We have evolved to better decode information through visualisation.
+
+---
+
+# Example
+
+-   Consider data on number of trips made for the purpose of holidays in two Australian regions
+    -   Alice Springs in the Northern Territory
+    -   The Wilderness West in Tasmania
+-   We will look at these data in two different ways
+
+---
+
+# As raw data
+
+```{python}
+import pandas as pd
+dat = pd.read_csv('../data/tourism.csv')
+dat['Quarter']=pd.to_datetime(dat['Quarter'])
+```
+
+---
+
+# As a plot (Alice Springs)
+
+```{python}
+import matplotlib.pyplot as plt
+fig, ax, = plt.subplots(figsize = (25,18))
+plt.plot(dat['Quarter'],dat['Alice Springs'],linewidth=5)
+plt.ylabel('Alice Springs', fontweight='bold',fontsize='25')
+plt.xlabel('Date', fontweight='bold',fontsize='25')
+ax.xaxis.set_tick_params(labelsize=24)
+ax.yaxis.set_tick_params(labelsize=24)
+plt.show()
+```
+
+---
+
+# As a plot (Wilderness)
+
+```{python}
+import matplotlib.pyplot as plt
+fig, ax, = plt.subplots(figsize = (25,18))
+plt.plot(dat['Quarter'],dat['Wilderness West'],linewidth=5)
+plt.xlabel('Date', fontweight='bold',fontsize='25')
+plt.ylabel('Wilderness West', fontweight='bold',fontsize='25')
+ax.xaxis.set_tick_params(labelsize=24)
+ax.yaxis.set_tick_params(labelsize=24)
+plt.show()
+
+```
+
+---
+
+# As a plot (Both)
+
+```{python}
+import matplotlib.pyplot as plt
+fig, ax, = plt.subplots(figsize = (25,18))
+plt.scatter(dat['Alice Springs'],dat['Wilderness West'],s=100)
+plt.xlabel('Alice Springs', fontweight='bold',fontsize='25')
+plt.ylabel('Wilderness West', fontweight='bold',fontsize='25')
+ax.xaxis.set_tick_params(labelsize=24)
+ax.yaxis.set_tick_params(labelsize=24)
+plt.show()
+
+```
