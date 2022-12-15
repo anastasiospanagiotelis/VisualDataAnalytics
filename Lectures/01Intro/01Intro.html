@@ -6,6 +6,8 @@
     <meta name="author" content="Visual Data Analytics" />
     <script src="libs/header-attrs-2.16/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
     <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
     <link rel="stylesheet" href="../css/mod.css" type="text/css" />
   </head>
@@ -67,28 +69,80 @@ MathJax.Hub.Config({
 
 -   Why visualisation?
 -   Good and bad visualisation.
--   Buliding a narrative with visualisation.
+-   Building a narrative with visualisation.
 -   Tools for visualisation.
 
 
 
 ---
 
+class: center, middle, inverse
+
+# Why Visualisation
+
+---
+
+# Visual Data Analytics (VDA)
+
+- The entire process leading to data graphing. 
+--
+
+- Encompasses the preparation of data for graphing and exploratory data analysis methods.
+--
+
+- Not simply about making ‘pretty pictures’ but about comprehending features of the data that are otherwise hidden by summary statistics.
+--
+
+- VDA is an invaluable business intelligence tool that uncovers hidden opportunities, and informs clear decision making
+
+---
+
+# How is VDA used?
+
+- To report data using visual means rather than tables, enabling faster comparisons.
+--
+
+- For exploratory analysis to uncover new questions, 
+--
+discover previously unknown patterns, 
+--
+identify extreme behaviour and 
+--
+understand relationships between variables.
+--
+
+- As a diagnostic tool following statistical estimation.
+
+---
+
 # Why do we visualise?
 
 -   More than 50% of the brain's neurons dedicated to vision.
+--
+
 -   Nearly 10 million bits of information are processed per second through our eyes.
+--
+
 -   Pre-attentive processing decodes information with high accuracy within 250 milliseconds (Healy and Enns, 2012).
+--
+
 -   We have evolved to better decode information through visualisation.
 
 ---
 
 # Example
 
--   Consider data on number of trips made for the purpose of holidays in two Australian regions
-    -   Alice Springs in the Northern Territory
-    -   The Wilderness West in Tasmania
--   We will look at these data in two different ways
+-   Consider data on number of trips made for the purpose of holidays in two Australian regions:
+--
+
+  -   Alice Springs in the Northern Territory,
+  -   The Wilderness West in Tasmania.
+--
+
+-   We will look at these data in two different ways.
+--
+
+- May want to understand how demand evolves over the year to plan resourcing.
 
 ---
 
@@ -96,7 +150,422 @@ MathJax.Hub.Config({
 
 
 
+&lt;table class="table table-striped" style="font-size: 16px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Quarter &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Alice Springs &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Wilderness West &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1998-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58.33 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1998-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.66 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.46 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1998-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 76.54 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1998-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.22 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.46 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1999-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1999-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 47.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.17 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1999-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 60.83 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.23 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1999-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.62 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2000-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.29 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.79 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2000-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.62 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.62 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2000-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.72 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2000-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41.84 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2001-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.66 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.18 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2001-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.87 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56.04 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2001-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.65 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2001-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.53 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2002-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.59 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.72 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2002-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29.50 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2002-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 52.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.96 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2002-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 34.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.17 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2003-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41.50 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2003-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.04 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2003-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.49 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.32 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2003-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2004-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84.88 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2004-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.33 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2004-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 74.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2004-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46.76 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2005-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.87 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56.23 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2005-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40.32 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30.53 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2005-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.49 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2005-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 31.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29.67 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2006-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.20 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2006-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2006-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.27 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2006-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 41.30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.26 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2007-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 50.56 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2007-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 40.03 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2007-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 48.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2007-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.28 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2008-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.19 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64.15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2008-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.90 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.69 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2008-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.38 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2008-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.76 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.74 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2009-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.56 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61.61 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2009-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.70 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.50 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2009-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 53.51 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.40 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2009-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 31.50 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.93 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2010-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58.08 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2010-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.65 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.61 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2010-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46.48 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.15 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2010-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.72 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.39 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2011-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 36.05 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2011-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.69 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.78 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2011-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.91 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2011-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14.57 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2012-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 44.54 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2012-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.64 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.07 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2012-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 47.64 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.81 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2012-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 22.51 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2013-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 47.25 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2013-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.73 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.84 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2013-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 37.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13.40 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2013-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.28 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2014-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58.30 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2014-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61.38 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.79 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2014-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 46.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.20 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2014-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 30.36 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 25.14 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2015-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10.52 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2015-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 38.67 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8.41 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2015-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 69.74 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.30 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2015-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.34 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.40 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 42.18 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.49 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.61 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2016-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 29.78 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2017-Q1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 21.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 57.03 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2017-Q2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39.03 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.95 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2017-Q3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11.52 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2017-Q4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 23.04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.94 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
 ---
+
+  
 
 # As a plot (Alice Springs)
 
@@ -104,7 +573,7 @@ MathJax.Hub.Config({
 
 ---
 
-# As a plot (Wilderness)
+# As a plot (Wilderness West)
 
 &lt;img src="01Intro_files/figure-html/unnamed-chunk-4-3.png" width="2400" style="display: block; margin: auto;" /&gt;
 
@@ -113,6 +582,372 @@ MathJax.Hub.Config({
 # As a plot (Both)
 
 &lt;img src="01Intro_files/figure-html/unnamed-chunk-5-5.png" width="2400" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Insights 
+
+- Both time series have a seasonal pattern.
+  - There are some times of the years more popular for holidays.
+--
+
+- The seasonal patterns are different.
+  - Alice Springs and Tasmanian Wllderness have very different climate.
+--
+
+- It is easier to make these insights by visualisation rather than looking at raw numbers.
+
+---
+
+# Anscombe's Quartet
+
+- Anscombe's quartet is a synthetic dataset of pairs of variables.
+--
+
+- For each data set, the means and variances and correlation between `\(x\)` and `\(y\)` are the same.
+--
+
+- However a simple scatterplot shows how different the datasets are:
+
+---
+
+# Anscombe's Quartet
+
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-6-7.png" width="2400" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center, middle, inverse
+
+# The good, the bad and the ugly
+
+---
+
+# Tufte's Principles
+
+- Principles of good practice in data visualisation are outlined in *The Visual Display of Quantitative Information* by Edward Tufte. These include:
+--
+
+  - Avoid distorting what the data have to say,
+  - Present many numbers in a small space,
+  - Make large data sets coherent,
+  - Encourage the eye to compare different pieces of data.
+
+
+---
+
+# Iliinsky's four pillars
+
+A visualisation is not just a picture
+
+- Purpose (the why): have clear focus.
+- Content (the what): contain correct and useful information.
+- Structure (the how): what graph to choose.
+- Formatting (everything else): bring focus.
+
+For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-effective-visualization-design#:~:text=Noah%20Iliinsky%20discusses%20the%20four,and%20design%20types%20to%20avoid.)
+
+---
+
+# Bad plots
+
+- Plots may be bad due to:
+  - Poor taste,
+  - Perceptually misleading,
+  - Data issues.
+--
+
+- In the following examples, also think about whether or not there are issues with: 
+  - How the data is *encoded* into a visualisation, i.e. data `\(\rightarrow\)` visuals,
+  - How the data are *decoded* by the person interpreting the plot , i.e. visuals `\(\rightarrow\)` insight.
+
+
+---
+
+# Poor taste
+
+![Monstrous costs](img/monster.jpg)
+
+---
+
+# Chartjunk
+
+- Chartjunk is the inclusion of elements that are not necessary to communicate the information.
+--
+
+- The inclusion of the following can be considered chartjunk:
+  - Heavy gridlines,
+  - Unnecessary text,
+  - Pictures within the chart.
+--
+
+- These are not incorrect but can be misleading due to a lack of objectivity.
+--
+
+- Also examples of chartjunk that do not mislead.
+
+
+---
+
+# Data-ink ratio
+
+![LowDI](img/Chartjunk-example.svg)
+
+---
+
+# Data-ink ratio
+
+- One way to think about the design of a visualisation is using the *data-ink* ratio.
+--
+
+- The idea is to show the most data with the least amount of 'ink'.
+--
+
+- In the previous plot, the stripes on the bars, the color in the background do not convey any information about the data.
+--
+
+- This is an example of chatjunk that is not misleading.
+---
+
+# Data density
+
+![](img/sword.jpg)
+
+---
+
+# Data density
+
+- In the previous plot there is only one data point.
+--
+
+- Visualisation is not misleading.
+--
+
+- However is a visualisation necessary here?
+--
+
+- Visualisations that convey more data are said to have a high *data density*.
+--
+
+- In general, try to avoid low data density.
+
+---
+
+# Perceptually misleading
+
+- Human perception is a broad field that takes in ideas from psychology and philosophy.
+- For data visualisation we can perceive:
+  - Length/Area/Volume,
+  - Shape,
+  - Position,
+  - Color,
+  - Angle.
+--
+
+- Now some examples where things go wrong.
+
+---
+
+# Confusing length and area
+
+![mac](img/mac.jpg)
+
+---
+
+# Confusing Length and Area 
+
+- On the previous plot, the number of customers is mapped to length (height of computer)
+--
+
+- The area of the 2D pictures of computers scale up more than their heights.
+--
+
+- The picture leads us to imagine a 3D computer making this effect worse.
+--
+
+- The value for Mac is only about 3 to 4 times more than for None but we perceive the difference to be much more.
+
+---
+
+# Beware 3D
+
+.pull-left[
+![](img/seo-traffic-columns.gif)
+]
+.pull-right[
+![](img/Misleading_Pie_Chart.png)
+]
+
+
+---
+
+# Beware 3D
+
+- Difficult to line up heights of bars with actual values
+--
+
+- Closer green bar (MSN) looks bigger.
+  - Do not use 3 dimensions when 2 work well.
+--
+
+- On the pie chart the green segment looks bigger.
+--
+
+- In general angles are difficult to perceive 
+  - Experts in visualisation prefer not to use pie charts, but they are popular in practice.
+--
+
+- Argumentum ad populum / Three men make a tiger.
+
+---
+
+# Lie factor
+
+![](img/Lie_factor_example1_image.jpg)
+
+---
+
+# Lie factor
+
+- The data indicates that mileage rose from 18 to 27.5 which is a 53% increase.
+--
+
+- The line on the graph increases from 0.6 inches to 5.3 inches which is a 783% increase!
+--
+
+- Tufte formalises this into a lie factor of 783/53≈14.
+--
+
+- It should be 1!
+--
+
+- Note that in contrast to previous examples where it was difficult to *decode* insights from the visualisation, here there is an error in how the data are *encoded* into a visualisation.
+
+---
+
+# Wrong data or plot
+
+.pull-left[
+![](img/display.jpeg)
+]
+.pull-right[
+![](img/Its-a-pizza-Chart-Not-a-Pie-chart-1.png)
+]
+
+---
+
+# Issues
+
+- The percentages do not add up to 100.
+- In the plot on the left, the data are a time series
+- In the plot on the right, respondents can like more than one topic
+- In both cases the pie chart is a poor choice of visualisation for the data at hand.
+--
+
+- Also pineapple should never be on a pizza!
+
+---
+
+# Bad (but not wrong) data
+
+![](img/diminishing-return.jpg)
+
+---
+
+# Problems
+
+- There is nothing incorrect about this graph.
+- However the message is misleading.
+- The income is a yearly income while the cost of college is over four years (and only paid once).
+- Also it does not show the income of people who are not college graduates.
+- Think carefully about comparisons on a plot.
+- Make sure conclusions align with what is in the plot.
+
+---
+
+
+class: center, middle inverse
+
+# Storytelling with data
+
+---
+
+# Data storytelling
+
+- Data storytelling is not about generating pretty charts and data presentations. 
+- It is about communicating insights that deliver real value.
+- Good data stories have data, visualisations and narrative
+
+---
+
+# Guide to building narrative
+
+Following discussion based on some Harvard Business Review articles
+--
+
+- How to make sure you're not using data just to justify decisions you've already made [ (link)](https://hbr.org/2018/10/how-to-make-sure-youre-not-using-data-just-to-justify-decisions-youve-already-made)
+- Use data to answer you key business questions[(link)](https://hbr.org/2020/02/use-data-to-answer-your-key-business-questions)
+- Visualisations that really work [(link)](https://hbr.org/2016/06/visualizations-that-really-work)
+  
+---
+
+# Key Business Questions
+
+- What problem am I trying to solve?
+  - Focus on something *actionable*!
+- Immerse yourself in data
+  - Including visualisation
+- Generate KBQs
+  - Make purpose specific
+- Prioritise KBQs
+  - Focus on easily activated, high impact KBQs
+- Iterate!
+
+---
+
+# Example: Tesla
+
+- Purpose: Improve customer satisfaction and operations with tyres?
+--
+- Visualisation:
+![](img/tesla.png)
+
+---
+
+# Tesla: KBQs
+
+- Identify KBQs
+  - Is there sufficient quality control on tyres leaving factory?
+  - How long do customers take to respond to a low pressure alert?
+  - Can we predict when when tyres go flat?
+--
+
+- Prioritise KBQs
+  - Will depend on context
+  - Predictive model may not be easily activated.
+  
+---
+
+# Narrative
+
+- All stories consist of 
+--
+
+ - Setup (current reality)
+ - Conflict (change)
+ - Resolution (new reality)
+--
+
+- For an example (with house prices) see [here](https://www.youtube.com/watch?v=r5_34YnCmMY&amp;t=13s).
+
+---
+class: inverse,middle, center
+
+# The tools
+
+---
+---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="libs/remark-latest.min.js"></script>
