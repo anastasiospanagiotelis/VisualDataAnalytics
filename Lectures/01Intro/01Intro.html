@@ -130,6 +130,23 @@ understand relationships between variables.
 
 ---
 
+# Anscombe's Quartet
+
+- Anscombe's quartet is a synthetic dataset of pairs of variables.
+--
+
+- For each data set, the means and variances and correlation between `\(x\)` and `\(y\)` are the same.
+--
+
+- However a simple scatterplot shows how different the datasets are:
+
+---
+
+# Anscombe's Quartet
+
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-2-1.png" width="2400" style="display: block; margin: auto;" /&gt;
+---
+
 # Example
 
 -   Consider data on number of trips made for the purpose of holidays in two Australian regions:
@@ -569,19 +586,19 @@ understand relationships between variables.
 
 # As a plot (Alice Springs)
 
-&lt;img src="01Intro_files/figure-html/unnamed-chunk-3-1.png" width="2400" style="display: block; margin: auto;" /&gt;
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-4-3.png" width="2400" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # As a plot (Wilderness West)
 
-&lt;img src="01Intro_files/figure-html/unnamed-chunk-4-3.png" width="2400" style="display: block; margin: auto;" /&gt;
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-5-5.png" width="2400" style="display: block; margin: auto;" /&gt;
 
 ---
 
 # As a plot (Both)
 
-&lt;img src="01Intro_files/figure-html/unnamed-chunk-5-5.png" width="2400" style="display: block; margin: auto;" /&gt;
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-6-7.png" width="2400" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -593,28 +610,11 @@ understand relationships between variables.
 --
 
 - The seasonal patterns are different.
-  - Alice Springs and Tasmanian Wllderness have very different climate.
+  - Alice Springs and Tasmanian Wilderness West have very different climate.
 --
 
 - It is easier to make these insights by visualisation rather than looking at raw numbers.
 
----
-
-# Anscombe's Quartet
-
-- Anscombe's quartet is a synthetic dataset of pairs of variables.
---
-
-- For each data set, the means and variances and correlation between `\(x\)` and `\(y\)` are the same.
---
-
-- However a simple scatterplot shows how different the datasets are:
-
----
-
-# Anscombe's Quartet
-
-&lt;img src="01Intro_files/figure-html/unnamed-chunk-6-7.png" width="2400" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -652,13 +652,13 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 
 # Bad plots
 
-- Plots may be bad due to:
-  - Poor taste,
-  - Perceptually misleading,
-  - Data issues.
+- According to Healey's [*Data Visualisation*](https://socviz.co/index.html) plots may be bad due to:
+  - Bad taste,
+  - Bad perception,
+  - Bad data.
 --
 
-- In the following examples, also think about whether or not there are issues with: 
+- In the following examples, think about: 
   - How the data is *encoded* into a visualisation, i.e. data `\(\rightarrow\)` visuals,
   - How the data are *decoded* by the person interpreting the plot , i.e. visuals `\(\rightarrow\)` insight.
 
@@ -840,7 +840,8 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 # Issues
 
 - The percentages do not add up to 100.
-- In the plot on the left, the data are a time series
+- In the plot on the left, the data are a time series.
+- Dates not given ('today' is 2016).
 - In the plot on the right, respondents can like more than one topic
 - In both cases the pie chart is a poor choice of visualisation for the data at hand.
 --
@@ -910,6 +911,7 @@ Following discussion based on some Harvard Business Review articles
 
 - Purpose: Improve customer satisfaction and operations with tyres?
 --
+
 - Visualisation:
 ![](img/tesla.png)
 
@@ -940,6 +942,16 @@ Following discussion based on some Harvard Business Review articles
 --
 
 - For an example (with house prices) see [here](https://www.youtube.com/watch?v=r5_34YnCmMY&amp;t=13s).
+--
+
+- We will work through an example now due with the Tourism data
+
+---
+
+# Tourism narrative
+
+&lt;img src="01Intro_files/figure-html/unnamed-chunk-7-9.png" width="2400" style="display: block; margin: auto;" /&gt;
+
 
 ---
 class: inverse,middle, center
@@ -947,6 +959,89 @@ class: inverse,middle, center
 # The tools
 
 ---
+
+# Python
+
+.pull-left[
+- General purpose programming language.
+- Language of choice for data science.
+- Open source libraries for visualisation.
+]
+
+.pull-right[
+![](img/python.jpeg)
+]
+
+---
+
+# Matplotlib
+
+.pull-left[
+- Most popular Python package for visualisation.
+- Highly customisable.
+- Works with with other packages.
+]
+.pull-right[
+![](img/matplotlib.png)
+]
+
+---
+
+# Seaborn
+
+.pull-left[
+- Builds on top of Matplotlib.
+- Easier integration with Pandas dataframes
+- Nice themes
+]
+.pull-right[
+![](img/seaborn.png)
+]
+
+---
+
+# Plotly
+
+.pull-left[
+- Good for interactive plots.
+- Suited to web-based interface.
+- Also implemented in other languages.
+]
+
+.pull-right[
+![](img/plotly.png)
+]
+
+---
+
+# Bokeh
+
+.pull-left[
+- Alternative for interactive plots.
+- Good for interactive dashboards.
+]
+
+.pull-right[
+![](img/bokeh.svg)
+]
+
+---
+
+# Why not Tableau?
+
+- Tableau is a popular commercial tool for visualisation.
+- It arguably has an easier interface (no coding).
+- Python is more customisable.
+- Python can be used everywhere and anywhere.
+- If you know Python, easier to learn Tableau (compared to the other way around).
+- You will need to learn coding, but this is not a coding course.
+
+---
+class: inverse,center, middle
+
+# Questions?
+
+
 ---
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
