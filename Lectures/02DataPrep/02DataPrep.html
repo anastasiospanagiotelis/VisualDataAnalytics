@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 2:Data Preparation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 2:</br>Data Preparation
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Data frames
+- Operations on data frames
+- Data types
+- Data profiling 
+
+
+
+---
+
+class: center, middle, inverse
+
+# Data frames
+
+---
+
+# What is data?
+
+- Data can be *structured* or *unstructured*
+- Structured data has
+  - Observations/ cases in rows
+  - Variables/ features in columns
+- Think of structured data as something that can be put into a spreadsheet.
+
+---
+
+# Example
+
+![](img/NBA.png)
+
+Current as of January 2023
+
+---
+
+# US Cities and States
+
+![](img/USCitiesStates.png)
+
+---
+
+# Observations and variables
+
+- In the first table:
+  - What are the observations?
+  - What are the variables?
+- How about the second table?
+
+---
+
+# Pandas
+
+.pull-left[
+- The Python library *pandas* stores data in a basic object called a *data frame*.
+- It also provides functions for reading in and manipulating data frames.
+]
+.pull-right[![](img/pandas.png)]
+
+---
+
+# NBA Data
+
+
+```python
+import pandas as pd
+NBA = pd.read_csv('../data/NBA1.csv')
+NBA
+```
+
+```
+##                    Player  Games Played  Minutes  Points            Birthplace
+## 0            LeBron James          1394    53142   37860            Akron, USA
+## 1            Kevin Durant           974    35776   26565    Washington DC, USA
+## 2            James Harden           962    33378   23915      Los Angeles, USA
+## 3       Russell Westbrook          1054    36352   23781       Long Beach, USA
+## 4              Chris Paul          1178    40623   21235    Winston-Salem, USA
+## 5           Stephen Curry           852    29256   20843            Akron, USA
+## 6           DeMar DeRozan           993    34087   20812          Compton, USA
+## 7          Damian Lillard           734    26648   18149          Oakland, USA
+## 8                Rudy Gay          1089    34135   17463         New York, USA
+## 9             Paul George           765    25711   15713         Palmdale, USA
+## 10             Kyle Lowry          1055    33750   15556     Philadelphia, USA
+## 11  Giannis Antetokounmpo           686    22365   15283        Athens, Greece
+## 12          Anthony Davis           629    21641   15075          Chicago, USA
+## 13           Bradley Beal           668    23211   14772         St Louis, USA
+## 14           Kyrie Irving           637    21756   14770  Melbourne, Australia
+```
+
+---
+
+# Keys
+
+- A key uniquely identifies an entry into the database.
+- In the first table the player name can act as a key.
+- Player birthplace could not be a key since both James and Curry are born in Akron.
+- However, be careful with names as keys, since two players may have the same name.
+
+---
+
+# Atomicity
+
+- Beware of variables that combine multiple pieces of information.
+- Birthplace can be broken down into city and country.
+- This may be useful if we want to visualise points scored by players born in USA and
+players born outside USA.
+- Variables should be *atomic*
+- This is also known as *parsing* the data.
+---
+
+# Split
+
+
+```python
+new = NBA.Birthplace.str.split(', ',expand = True)
+new
+```
+
+```
+##                 0          1
+## 0           Akron        USA
+## 1   Washington DC        USA
+## 2     Los Angeles        USA
+## 3      Long Beach        USA
+## 4   Winston-Salem        USA
+## 5           Akron        USA
+## 6         Compton        USA
+## 7         Oakland        USA
+## 8        New York        USA
+## 9        Palmdale        USA
+## 10   Philadelphia        USA
+## 11         Athens     Greece
+## 12        Chicago        USA
+## 13       St Louis        USA
+## 14      Melbourne  Australia
+```
+---
+
+# With original table
+
+
+```python
+NBA["CityOfBirth"] = new[0]
+NBA["CountryOfBirth"] = new[1]
+NBA
+```
+
+```
+##                    Player  Games Played  ...    CityOfBirth  CountryOfBirth
+## 0            LeBron James          1394  ...          Akron             USA
+## 1            Kevin Durant           974  ...  Washington DC             USA
+## 2            James Harden           962  ...    Los Angeles             USA
+## 3       Russell Westbrook          1054  ...     Long Beach             USA
+## 4              Chris Paul          1178  ...  Winston-Salem             USA
+## 5           Stephen Curry           852  ...          Akron             USA
+## 6           DeMar DeRozan           993  ...        Compton             USA
+## 7          Damian Lillard           734  ...        Oakland             USA
+## 8                Rudy Gay          1089  ...       New York             USA
+## 9             Paul George           765  ...       Palmdale             USA
+## 10             Kyle Lowry          1055  ...   Philadelphia             USA
+## 11  Giannis Antetokounmpo           686  ...         Athens          Greece
+## 12          Anthony Davis           629  ...        Chicago             USA
+## 13           Bradley Beal           668  ...       St Louis             USA
+## 14           Kyrie Irving           637  ...      Melbourne       Australia
+## 
+## [15 rows x 7 columns]
+```
+---
+
+# Another example
+
+ &lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Player&lt;/th&gt;
+    &lt;th&gt;Points&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Steph Curry&lt;/td&gt;
+    &lt;td&gt;20843 for Warriors&lt;/td&gt;
+  
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Kevin Durant&lt;/td&gt;
+    &lt;td&gt;17566 for Thunder, 5374 for Warriors, 3625 for Nets&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt; 
+
+---
+
+# Split 
+
+ &lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Player&lt;/th&gt;
+    &lt;th&gt;Points for Warriors&lt;/th&gt;
+    &lt;th&gt;Points for Thunder&lt;/th&gt;
+    &lt;th&gt;Points for Nets&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Steph Curry&lt;/td&gt;
+    &lt;td&gt;20843&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+    &lt;td&gt;&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Kevin Durant&lt;/td&gt;
+    &lt;td&gt;5374&lt;/td&gt;
+    &lt;td&gt;17566&lt;/td&gt;
+    &lt;td&gt;3625&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt; 
+
+---
+
+# Problems
+
+- Empty cells for Steph Curry
+  - Not such a big issue (see missing data later)
+- What if Kevin Durant moves to another team?
+- What if we want to include Giannis (only played for Bucks)?
+  - Would need new columns and code that previously worked may break.
+
+---
+
+# Solution
+
+ &lt;table&gt;
+  &lt;tr&gt;
+    &lt;th&gt;Player&lt;/th&gt;
+    &lt;th&gt;Team&lt;/th&gt;
+    &lt;th&gt;Points&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Steph Curry&lt;/td&gt;
+    &lt;td&gt;Warriors&lt;/td&gt;
+    &lt;td&gt;20843&lt;/td&gt;  
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Kevin Durant&lt;/td&gt;
+    &lt;td&gt;Thunder&lt;/td&gt;
+    &lt;td&gt;17566&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Kevin Durant&lt;/td&gt;
+    &lt;td&gt;Warriors&lt;/td&gt;
+    &lt;td&gt;5374&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;Kevin Durant&lt;/td&gt;
+    &lt;td&gt;Nets&lt;/td&gt;
+    &lt;td&gt;3625&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt; 
+
+---
+
+# First Normal Form
+
+- New data entries can be added by adding rows only.
+- Now the player and team combined form key.
+- Overall the example so far is about getting the data into the *first normal form*.
+- For the purposes of visualisation the lesson is to think carefully about how the data is structured.
+---
+class: inverse, middle, center
+
+# Operations on Data Frames
+
+---
+
+# The simple machines
+
+- Hundreds of years ago, it was believed that all machines were made up of six simple machines
+- These include: levers, wheels, pulleys, screws, etc.
+- Nowadays machines are more complicated.
+- But this is a good metaphor for data frames
+
+---
+
+# Simple machines of data
+
+- We will consider six "simple machines" of data frames.
+  - Transforming
+  - Sorting
+  - Filtering
+  - Group by/ aggregate
+  - Reshaping (melting and casting)
+  - Joining (merging)
+- By some combination of these we can 'munge' data frames into almost any data frame we need.
+
+---
+
+# Transform
+
+- Create a new variable based on values of existing variables.
+- For example, in the NBA data frame we have games played and points.
+- Suppose we want to create a variable of points per game (PPG)
+
+---
+
+# Transform in Python
+
+
+```python
+
+NBA["PPG"]=NBA["Points"]/ NBA["Games Played"]
+NBA
+```
+
+```
+##                    Player  Games Played  ...  CountryOfBirth        PPG
+## 0            LeBron James          1394  ...             USA  27.159254
+## 1            Kevin Durant           974  ...             USA  27.274127
+## 2            James Harden           962  ...             USA  24.859667
+## 3       Russell Westbrook          1054  ...             USA  22.562619
+## 4              Chris Paul          1178  ...             USA  18.026316
+## 5           Stephen Curry           852  ...             USA  24.463615
+## 6           DeMar DeRozan           993  ...             USA  20.958711
+## 7          Damian Lillard           734  ...             USA  24.726158
+## 8                Rudy Gay          1089  ...             USA  16.035813
+## 9             Paul George           765  ...             USA  20.539869
+## 10             Kyle Lowry          1055  ...             USA  14.745024
+## 11  Giannis Antetokounmpo           686  ...          Greece  22.278426
+## 12          Anthony Davis           629  ...             USA  23.966614
+## 13           Bradley Beal           668  ...             USA  22.113772
+## 14           Kyrie Irving           637  ...       Australia  23.186813
+## 
+## [15 rows x 8 columns]
+```
+
+How would you get points per minute?
+
+---
+
+
+# Sort
+
+- Suppose we want to sort the data according to one of the variables.
+- We can use the `sort_values` function.
+- Consider that we want to sort by minutes played from smallest to largest.
+
+---
+
+# Players by minutes
+
+
+```python
+NBAbymin = NBA.sort_values(by = 'Minutes')
+NBAbymin
+```
+
+```
+##                    Player  Games Played  ...  CountryOfBirth        PPG
+## 12          Anthony Davis           629  ...             USA  23.966614
+## 14           Kyrie Irving           637  ...       Australia  23.186813
+## 11  Giannis Antetokounmpo           686  ...          Greece  22.278426
+## 13           Bradley Beal           668  ...             USA  22.113772
+## 9             Paul George           765  ...             USA  20.539869
+## 7          Damian Lillard           734  ...             USA  24.726158
+## 5           Stephen Curry           852  ...             USA  24.463615
+## 2            James Harden           962  ...             USA  24.859667
+## 10             Kyle Lowry          1055  ...             USA  14.745024
+## 6           DeMar DeRozan           993  ...             USA  20.958711
+## 8                Rudy Gay          1089  ...             USA  16.035813
+## 1            Kevin Durant           974  ...             USA  27.274127
+## 3       Russell Westbrook          1054  ...             USA  22.562619
+## 4              Chris Paul          1178  ...             USA  18.026316
+## 0            LeBron James          1394  ...             USA  27.159254
+## 
+## [15 rows x 8 columns]
+```
+
+---
+
+# Filter
+
+- Filtering involves selecting only some subset of the data.
+- There are many ways to do this
+  - Select rows
+  - Select columns
+- Select by a logical condition
+
+---
+
+# Example 
+
+- Suppose we only want to consider 
+  - Players with points per game greater than 20
+  - Players born in Akron
+  - Players not born in the United States
+- These are all examples of logical conditions (either true or false).
+
+---
+
+# Players with PPG above 20
+
+
+```python
+NBAppg20 = NBA.loc[NBA["PPG"]&gt;20]
+NBAppg20
+```
+
+```
+##                    Player  Games Played  ...  CountryOfBirth        PPG
+## 0            LeBron James          1394  ...             USA  27.159254
+## 1            Kevin Durant           974  ...             USA  27.274127
+## 2            James Harden           962  ...             USA  24.859667
+## 3       Russell Westbrook          1054  ...             USA  22.562619
+## 5           Stephen Curry           852  ...             USA  24.463615
+## 6           DeMar DeRozan           993  ...             USA  20.958711
+## 7          Damian Lillard           734  ...             USA  24.726158
+## 9             Paul George           765  ...             USA  20.539869
+## 11  Giannis Antetokounmpo           686  ...          Greece  22.278426
+## 12          Anthony Davis           629  ...             USA  23.966614
+## 13           Bradley Beal           668  ...             USA  22.113772
+## 14           Kyrie Irving           637  ...       Australia  23.186813
+## 
+## [12 rows x 8 columns]
+```
+
+---
+
+
+# Players born in Akron
+
+
+```python
+NBAAkr = NBA.loc[NBA["CityOfBirth"] == 'Akron']
+NBAAkr
+```
+
+```
+##           Player  Games Played  Minutes  ...  CityOfBirth CountryOfBirth        PPG
+## 0   LeBron James          1394    53142  ...        Akron            USA  27.159254
+## 5  Stephen Curry           852    29256  ...        Akron            USA  24.463615
+## 
+## [2 rows x 8 columns]
+```
+
+Note that a single = denotes assignment, a double == denotes 'equals' in a logical statement.
+
+---
+
+
+# Players born outside USA
+
+
+```python
+NBAnonUS = NBA.loc[NBA["CountryOfBirth"] != 'USA']
+NBAnonUS
+```
+
+```
+##                    Player  Games Played  ...  CountryOfBirth        PPG
+## 11  Giannis Antetokounmpo           686  ...          Greece  22.278426
+## 14           Kyrie Irving           637  ...       Australia  23.186813
+## 
+## [2 rows x 8 columns]
+```
+
+In general we can read ! as 'not' in Python
+
+---
+
+
+# Group by / aggregate
+
+- Suppose we want to compare total points scored by players country of birth.
+- This requires two functions
+  - The `groupby` function tells us the variable to group on (in this case Country of Birth).
+  - The `agg` function tells us which variable to aggregate (in this case points)
+
+---
+
+# Groupby/aggregate in Python
+
+
+```python
+
+NBAg = NBA.groupby('CountryOfBirth').agg({'Points': 'sum'})
+NBAg
+```
+
+```
+##                 Points
+## CountryOfBirth        
+## Australia        14770
+## Greece           15283
+## USA             271739
+```
+
+Other ways to aggregate include mean, min and max.
+
+---
+
+# Reshape
+
+- Often in order to produce the visualisation we want we need to reshape the data.
+- This is done using two functions
+  - The function `melt` converts the data from wide to long.
+  - The function `pivot` converts the data from long to wide.
+
+---
+
+# Melting
+
+
+```python
+NBAlong = NBA.melt(id_vars=['Player'],value_vars=['Games Played', 'Minutes', 'Points'])
+NBAlong
+```
+
+```
+##                    Player      variable  value
+## 0            LeBron James  Games Played   1394
+## 1            Kevin Durant  Games Played    974
+## 2            James Harden  Games Played    962
+## 3       Russell Westbrook  Games Played   1054
+## 4              Chris Paul  Games Played   1178
+## 5           Stephen Curry  Games Played    852
+## 6           DeMar DeRozan  Games Played    993
+## 7          Damian Lillard  Games Played    734
+## 8                Rudy Gay  Games Played   1089
+## 9             Paul George  Games Played    765
+## 10             Kyle Lowry  Games Played   1055
+## 11  Giannis Antetokounmpo  Games Played    686
+## 12          Anthony Davis  Games Played    629
+## 13           Bradley Beal  Games Played    668
+## 14           Kyrie Irving  Games Played    637
+## 15           LeBron James       Minutes  53142
+## 16           Kevin Durant       Minutes  35776
+## 17           James Harden       Minutes  33378
+## 18      Russell Westbrook       Minutes  36352
+## 19             Chris Paul       Minutes  40623
+## 20          Stephen Curry       Minutes  29256
+## 21          DeMar DeRozan       Minutes  34087
+## 22         Damian Lillard       Minutes  26648
+## 23               Rudy Gay       Minutes  34135
+## 24            Paul George       Minutes  25711
+## 25             Kyle Lowry       Minutes  33750
+## 26  Giannis Antetokounmpo       Minutes  22365
+## 27          Anthony Davis       Minutes  21641
+## 28           Bradley Beal       Minutes  23211
+## 29           Kyrie Irving       Minutes  21756
+## 30           LeBron James        Points  37860
+## 31           Kevin Durant        Points  26565
+## 32           James Harden        Points  23915
+## 33      Russell Westbrook        Points  23781
+## 34             Chris Paul        Points  21235
+## 35          Stephen Curry        Points  20843
+## 36          DeMar DeRozan        Points  20812
+## 37         Damian Lillard        Points  18149
+## 38               Rudy Gay        Points  17463
+## 39            Paul George        Points  15713
+## 40             Kyle Lowry        Points  15556
+## 41  Giannis Antetokounmpo        Points  15283
+## 42          Anthony Davis        Points  15075
+## 43           Bradley Beal        Points  14772
+## 44           Kyrie Irving        Points  14770
+```
+
+---
+
+# Pivoting
+
+
+```python
+NBAwide = NBAlong.pivot(index='Player', columns = 'variable')
+NBAwide
+```
+
+```
+##                              value               
+## variable              Games Played Minutes Points
+## Player                                           
+## Anthony Davis                  629   21641  15075
+## Bradley Beal                   668   23211  14772
+## Chris Paul                    1178   40623  21235
+## Damian Lillard                 734   26648  18149
+## DeMar DeRozan                  993   34087  20812
+## Giannis Antetokounmpo          686   22365  15283
+## James Harden                   962   33378  23915
+## Kevin Durant                   974   35776  26565
+## Kyle Lowry                    1055   33750  15556
+## Kyrie Irving                   637   21756  14770
+## LeBron James                  1394   53142  37860
+## Paul George                    765   25711  15713
+## Rudy Gay                      1089   34135  17463
+## Russell Westbrook             1054   36352  23781
+## Stephen Curry                  852   29256  20843
+```
+
+---
+
+# A better example
+
+
+```python
+Sydney = pd.read_csv('../data/SydneyClimate.csv')
+Sydney
+```
+
+```
+##    Year   M01   M02   M03   M04   M05   M06   M07   M08   M09   M10   M11   M12
+## 0  2017   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN   NaN  24.9  24.8  28.6
+## 1  2018  28.5  28.1  27.4  26.7  22.2  17.7  19.9  19.3  21.0  21.9  25.0  27.1
+## 2  2019  29.6  27.7  26.9  25.1  22.7  18.6  19.8  19.5  22.0  24.7  27.0  28.1
+## 3  2020  29.0  27.5  25.6  24.5  20.3  18.7  18.2  19.5  22.7  24.2  26.1  26.1
+## 4  2021  27.4  26.7  25.5  24.3  20.9  18.1  18.2  20.7  22.5  24.2  23.2  26.1
+## 5  2022  27.7  26.7  24.8  23.7  20.8  18.3  17.0  19.8  20.6  22.6  24.3   NaN
+```
+
+Retrieved from Bureau of Meteorology
+
+---
+
+# Melting
+
+
+```python
+Sydlong = Sydney.melt(id_vars='Year').sort_values(by = ['Year','variable'])
+Sydlong
+```
+
+```
+##     Year variable  value
+## 0   2017      M01    NaN
+## 6   2017      M02    NaN
+## 12  2017      M03    NaN
+## 18  2017      M04    NaN
+## 24  2017      M05    NaN
+## ..   ...      ...    ...
+## 47  2022      M08   19.8
+## 53  2022      M09   20.6
+## 59  2022      M10   22.6
+## 65  2022      M11   24.3
+## 71  2022      M12    NaN
+## 
+## [72 rows x 3 columns]
+```
+
+---
+
+# Plot
+
+&lt;img src="02DataPrep_files/figure-html/unnamed-chunk-15-1.png" width="2400" style="display: block; margin: auto;" /&gt;
+---
+
+# Merge
+
+- Bring two data frames together
+- Similar to a VLOOKUP type function in spreadsheet programs such as Excel.
+- We can use `merge` to add information about State of birth for NBA players.
+
+---
+
+# Merge
+
+
+```python
+CitiesStates = pd.read_csv('../data/UScitiesstates.csv')
+NBAmerge = pd.merge(NBA,CitiesStates, left_on = 'CityOfBirth', right_on = 'City')
+NBAmerge
+```
+
+```
+##                Player  Games Played  ...           City           State
+## 0        LeBron James          1394  ...          Akron            Ohio
+## 1       Stephen Curry           852  ...          Akron            Ohio
+## 2        James Harden           962  ...    Los Angeles      California
+## 3   Russell Westbrook          1054  ...     Long Beach      California
+## 4          Chris Paul          1178  ...  Winston-Salem  North Carolina
+## 5       DeMar DeRozan           993  ...        Compton      California
+## 6      Damian Lillard           734  ...        Oakland      California
+## 7            Rudy Gay          1089  ...       New York        New York
+## 8         Paul George           765  ...       Palmdale      California
+## 9          Kyle Lowry          1055  ...   Philadelphia    Pennsylvania
+## 10      Anthony Davis           629  ...        Chicago        Illinois
+## 11       Bradley Beal           668  ...       St Louis        Missouri
+## 
+## [12 rows x 10 columns]
+```
+---
+
+# Different type of merge
+
+- Left: Keep all entries from first data frame
+- Right: Keep all entries from first data frame
+- Inner: Keep all entries that appear in both data frames
+- Outer: Keep all entries that appear in either data frame
+
+---
+
+# Merge
+
+
+```python
+CitiesStates = pd.read_csv('../data/UScitiesstates.csv')
+NBAmerge = pd.merge(NBA,CitiesStates, how = 'outer', left_on = 'CityOfBirth', right_on = 'City')
+NBAmerge
+```
+
+```
+##                    Player  Games Played  ...           City           State
+## 0            LeBron James          1394  ...          Akron            Ohio
+## 1           Stephen Curry           852  ...          Akron            Ohio
+## 2            Kevin Durant           974  ...            NaN             NaN
+## 3            James Harden           962  ...    Los Angeles      California
+## 4       Russell Westbrook          1054  ...     Long Beach      California
+## 5              Chris Paul          1178  ...  Winston-Salem  North Carolina
+## 6           DeMar DeRozan           993  ...        Compton      California
+## 7          Damian Lillard           734  ...        Oakland      California
+## 8                Rudy Gay          1089  ...       New York        New York
+## 9             Paul George           765  ...       Palmdale      California
+## 10             Kyle Lowry          1055  ...   Philadelphia    Pennsylvania
+## 11  Giannis Antetokounmpo           686  ...            NaN             NaN
+## 12          Anthony Davis           629  ...        Chicago        Illinois
+## 13           Bradley Beal           668  ...       St Louis        Missouri
+## 14           Kyrie Irving           637  ...            NaN             NaN
+## 
+## [15 rows x 10 columns]
+```
+---
+
+# Putting them together
+
+- In your own time, construct data frames for the following following:
+  - Each state and with the maximum points per minute (PPM) by a player from each state.
+  - The same as above with states ranked from highest to lowest according to the maximum PPM.
+  - The same as above but with an extra column with the player name of the player with the highest PPM in each state.
+- There may be more than one correct answer.
+
+---
+class: inverse, middle, center
+
+# Data types
+
+---
+
+# Data Types
+
+- Each variable measures a certain characteristic.
+- Characteristics can be measured in different ways
+- This leads to *data type* which are important for understanding
+  - How we can transform data.
+  - The correct visualisation to use.
+
+---
+
+# Scales of measurement
+
+- Any old (or new) statistics textbook will introduce four scales of measurement
+  - Nominal
+  - Ordinal
+  - Interval
+  - Ratio
+- These are still useful (with some caveats).
+
+---
+
+# Nominal data
+
+- Tells us something about a characteristic but there is no notion of having more or less of a characteristic.
+- Example: Country of birth.
+- Can you think of other examples?
+- Even if we assign numbers to nominal categories, it does not make sense to find means medians etc.
+- The mode still makes sense.
+
+---
+
+# Ordinal data
+
+- Tells us whether we have more or less of a characteristic, but not how much more or less.
+- Example: rate players as good, very good, excellent.
+- If we assign numbers to nominal categories it still does not make sense to add subtract these numbers.
+- However the median (and the mode) still make sense.
+
+---
+
+# Interval/Ratio data
+
+- All numerical data is either interval or ratio data.
+- The differences between the two concern whether the zero point of the scale truly represents an absence of the characteristic being measured.
+- Best understood with an example.
+
+---
+
+# Points per game
+
+- Suppose I constructed a new index for points per game (PPG) where a PPG of 20 now becomes a PPG of 0.
+  - Paul George (PPG: 20.5) would have a "new" PPG of 0.5.
+  - Steph Curry (PPG: 24.5) would have a "new" PPG of 4.5.
+- Does this mean that Curry is scoring 9 times as much as George? No.
+
+---
+
+# The textbook example
+
+- The famous example is temperature.
+- The Celsius scale attaches 0 and 100 to the freezing and boiling point of water.
+  - This is arbitrary
+- For the Kelvin scale, zero is true zero since it is a temperature where atoms have no energy (loosely speaking).
+
+---
+
+# Does it matter?
+
+- Not that much (outside of science).
+- Most data we see in business are ratio data.
+- In general, I will use *numeric data* and *ratio data* interchangeably.
+- Just think carefully when dividing with numerical variables.
+
+---
+# Summary
+
+.center[
+&lt;img src="img/dataops.png" width="500" height="500" /&gt;
+]
+---
+
+# Some exceptions
+
+- Nominal data with two categories.
+  - Born in US assigned 1, born outside US assigned 0.
+  - Arithmetic mean is then the *proportion* born in US.
+- Likert (customer satisfaction) scales:
+  - Strongly disagree = 1, Disagree = 2, etc.
+  - Using an arithmetic mean is controversial but common in practice.
+- Time is very unusual since calendar effects are important in business.
+  
+---
+
+# Types in Pandas
+
+
+```python
+NBA.dtypes
+```
+
+```
+## Player             object
+## Games Played        int64
+## Minutes             int64
+## Points              int64
+## Birthplace         object
+## CityOfBirth        object
+## CountryOfBirth     object
+## PPG               float64
+## dtype: object
+```
+
+Object is text, int64 is an integer and float64 is a real number.
+
+---
+class: inverse, middle, center
+
+
+# Data Profiling
+
+---
+
+# Some issues
+
+- Duplicated entries
+  - Can be removed using `drop_duplicates` function in pandas.
+- Data entry errors
+  - For example cannot score 20000 points in 3 minutes.
+  - Requires domain knowledge.
+  - These issues can be discovered during visualisation.
+
+---
+
+# Standardisations
+  
+- Steph Curry may appear elsewhere in the data as 
+  - "Stephen Curry" 
+  - "Wardell Stephen Curry II" (his full name). 
+- Similar things happen with company names Facebook/ Meta, General Motors/ GM etc.
+- Requires domain knowledge and some extra coding.
+
+---
+
+# Missing Data
+
+- There are often missing data
+- Need to think of a good strategy to encode missing data.
+- In Python there is `NaN` for this.
+- Often will replace with a number but this is a bad strategy
+
+---
+
+# Do not use "0" for "missing"
+
+- Suppose if games played is missing and we replace with zero.
+- The zeros will distort the mean.
+- If we compute points per game there will be division by zero.
+- Do not replace missing values by zeros.
+
+---
+
+# Do not use "-999" for "missing"
+
+- Sometimes a completely implausible number such as -999 is used to denote missing.
+- This can lead to strange visualisations
+- The following example is for the Sydney temperature data
+
+---
+
+# Temperature
+
+&lt;img src="02DataPrep_files/figure-html/unnamed-chunk-19-3.png" width="2400" style="display: block; margin: auto;" /&gt;
+---
+
+# Dealing with missing data
+
+- Only use complete cases
+- Impute missing values
+  - With a random value
+  - With mean/median or mode
+  - More complicated models
+- Report/Visualise missing data
+  - By reporting missing data this gives a better idea of uncertainty.
+---
+
+# Report missing
+
+![](img/Essential.png)
+
+Source: [Guardian](https://www.theguardian.com/australia-news/commentisfree/2022/dec/13/as-2022-comes-to-a-close-australians-can-enjoy-a-reprieve-from-the-algorithms-of-fear-and-outrage)
+
+
+---
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- Our focus from now on will be visualisation.
+- Writing code to visualise messy data is hard.
+- Spend the time to clean your data.
+- Focus on the *principles* since these work for Excel, Tableau, R, Python, etc.
+- After you appreciate the principles, practice your coding.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
