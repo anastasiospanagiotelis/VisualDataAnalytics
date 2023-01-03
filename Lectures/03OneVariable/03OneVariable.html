@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 3:VisualisingOne Variable</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 3:</br>Visualising</br>One Variable
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Nominal/Ordinal Data
+  - Bar 
+  - Lollipop
+  - Pie/donut
+- Numeric data
+ - Box plot
+ - Histograms
+ - Kernel density
+
+
+
+---
+
+# Motivation
+
+- Understand the distribution of a variable
+  - Find outliers
+  - Find multi-modality
+  - Find skew
+- Understanding the distribution is about generating interesting questions for further analysis.
+  
+---
+
+class: center, middle, inverse
+
+# Categorical variables
+
+---
+
+# The bar chart
+
+- The categories are displayed on one axis (usually x).
+- The *frequency* of each observation is displayed on the other axis (usually y).
+- The frequency is mapped to the *length* of each bar.
+- For this reason always include zero on the y axis.
+
+---
+
+# Examples
+
+- We will use two dataets that can be directly loaded from the `seaborn` package.
+  - The `taxis` dataset with data on pickup and drop off locations, fares, payment type etc., in New York City.
+  - The `diamonds` dataset with information on size, cut clarity, price, etc. of diamonds.
+- These contain nominal, ordinal and numeric variables.  
+
+---
+
+# Taxis data
+
+
+```python
+
+import seaborn as sns
+taxisdat = sns.load_dataset('taxis')
+taxisdat
+```
+
+```
+##                    pickup              dropoff  ...  pickup_borough  dropoff_borough
+## 0     2019-03-23 20:21:09  2019-03-23 20:27:24  ...       Manhattan        Manhattan
+## 1     2019-03-04 16:11:55  2019-03-04 16:19:00  ...       Manhattan        Manhattan
+## 2     2019-03-27 17:53:01  2019-03-27 18:00:25  ...       Manhattan        Manhattan
+## 3     2019-03-10 01:23:59  2019-03-10 01:49:51  ...       Manhattan        Manhattan
+## 4     2019-03-30 13:27:42  2019-03-30 13:37:14  ...       Manhattan        Manhattan
+## ...                   ...                  ...  ...             ...              ...
+## 6428  2019-03-31 09:51:53  2019-03-31 09:55:27  ...       Manhattan        Manhattan
+## 6429  2019-03-31 17:38:00  2019-03-31 18:34:23  ...          Queens            Bronx
+## 6430  2019-03-23 22:55:18  2019-03-23 23:14:25  ...        Brooklyn         Brooklyn
+## 6431  2019-03-04 10:09:25  2019-03-04 10:14:29  ...        Brooklyn         Brooklyn
+## 6432  2019-03-13 19:31:22  2019-03-13 19:48:02  ...        Brooklyn         Brooklyn
+## 
+## [6433 rows x 14 columns]
+```
+
+---
+
+# Bar plot of pick up
+
+
+```python
+sns.countplot(data = taxisdat, x='pickup_borough')
+```
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-3-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Change orientation
+
+
+```python
+sns.countplot(data = taxisdat, y='pickup_borough')
+```
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-4-3.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Order by frequency
+
+
+```python
+sns.countplot(data = taxisdat, x='pickup_borough', order = taxisdat['pickup_borough'].value_counts().index)
+```
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-5-5.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+Data are nominal - this is fine.
+
+---
+
+# Ordinal data
+
+- For nominal data it is suitable to order according to frequency.
+- This is not the case for ordinal data
+- Always  order according to categories of the variable.
+- Diamonds dataset has clarity as an ordinal variable
+  - Categories ordered as IF, VVS1, VVS2, VS1, VS2, SI1, SI2, I1.
+
+---
+
+# Diamonds data
+
+
+```python
+diam = sns.load_dataset('diamonds')
+diam
+```
+
+```
+##        carat        cut color clarity  depth  table  price     x     y     z
+## 0       0.23      Ideal     E     SI2   61.5   55.0    326  3.95  3.98  2.43
+## 1       0.21    Premium     E     SI1   59.8   61.0    326  3.89  3.84  2.31
+## 2       0.23       Good     E     VS1   56.9   65.0    327  4.05  4.07  2.31
+## 3       0.29    Premium     I     VS2   62.4   58.0    334  4.20  4.23  2.63
+## 4       0.31       Good     J     SI2   63.3   58.0    335  4.34  4.35  2.75
+## ...      ...        ...   ...     ...    ...    ...    ...   ...   ...   ...
+## 53935   0.72      Ideal     D     SI1   60.8   57.0   2757  5.75  5.76  3.50
+## 53936   0.72       Good     D     SI1   63.1   55.0   2757  5.69  5.75  3.61
+## 53937   0.70  Very Good     D     SI1   62.8   60.0   2757  5.66  5.68  3.56
+## 53938   0.86    Premium     H     SI2   61.0   58.0   2757  6.15  6.12  3.74
+## 53939   0.75      Ideal     D     SI2   62.2   55.0   2757  5.83  5.87  3.64
+## 
+## [53940 rows x 10 columns]
+```
+
+---
+
+# Ordinal   
+
+
+```python
+diam = sns.load_dataset('diamonds')
+sns.countplot(data=diam,x='clarity')
+```
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-7-7.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+Categories ordered by levels of variable - this is fine.
+
+---
+
+#Incorrect plot
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-8-9.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+Incorrect. Categories in alphabetical order.
+
+---
+
+#Incorrect plot
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-9-11.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+Incorrect. Ordered by frequency.
+
+---
+
+# Single color
+
+
+```python
+diam = sns.load_dataset('diamonds')
+sns.countplot(data=diam,x='clarity',color='tab:blue')
+```
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-10-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Coloring
+
+- Although by default categories have different colors this is not strictly necessary.
+- Arguably it is distracting, especially when there are more categories.
+- Later on we will use color to display data
+  - For example grouping by a second variable and mapping that to color.
+- This will be covered later on.
+
+---
+
+# Lollipop charts
+
+- If there are 
+  - A large number of categories,
+  - If the categories all have similar frequncies,
+- then consider using a lollipop chart.
+- This can be done with some data munging using `value_counts` and the `stem` function in `matplotlib`.
+
+---
+
+# Data preparation
+
+For simpler graph, will only consider dropoff in Manhattan
+
+
+```python
+freq = taxisdat[taxisdat['pickup_borough']=='Bronx'].value_counts('pickup_zone')
+freq
+```
+
+```
+## pickup_zone
+## East Concourse/Concourse Village       9
+## Parkchester                            8
+## Mott Haven/Port Morris                 8
+## Co-Op City                             5
+## East Tremont                           5
+## Mount Hope                             5
+## Claremont/Bathgate                     5
+## Soundview/Castle Hill                  4
+## Morrisania/Melrose                     4
+## Van Nest/Morris Park                   3
+## University Heights/Morris Heights      3
+## Highbridge                             3
+## Belmont                                3
+## Bronxdale                              2
+## Fordham South                          2
+## Kingsbridge Heights                    2
+## Melrose South                          2
+## Allerton/Pelham Gardens                2
+## Williamsbridge/Olinville               2
+## Van Cortlandt Village                  2
+## Westchester Village/Unionport          2
+## Schuylerville/Edgewater Park           2
+## Soundview/Bruckner                     2
+## Norwood                                2
+## West Concourse                         2
+## Bedford Park                           1
+## Bronx Park                             1
+## West Farms/Bronx River                 1
+## Spuyten Duyvil/Kingsbridge             1
+## Crotona Park East                      1
+## Riverdale/North Riverdale/Fieldston    1
+## Hunts Point                            1
+## Pelham Parkway                         1
+## Pelham Bay                             1
+## Woodlawn/Wakefield                     1
+## dtype: int64
+```
+
+---
+
+# Lollipop plot (code)
+
+
+```python
+import matplotlib.pyplot as plt
+plt.stem(freq)
+plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.show()
+```
+
+---
+
+# Lollipop plot (output)
+
+&lt;img src="03OneVariable_files/figure-html/unnamed-chunk-13-15.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Pie charts
+
+- Pie charts are considered to be poor practice by visualisation experts since
+  - It is difficult to compare sizes of angles.
+  - It is difficult to make comparisons unless categories are close.
+  - They do not handle large numbers of categories.
+- Following examples come from a [Business Insider article](https://www.businessinsider.com/pie-charts-are-the-worst-2013-6) by Walt Hickey.
+
+---
+
+# Pie chart
+
+![](img/piechart.webp)
+
+---
+
+# Bar chart
+
+![](img/barchart.webp)
+
+---
+
+
+# Pie chart
+
+![](img/eupie.webp)
+
+---
+
+# Bar chart
+
+![](img/eubar.webp)
+
+---
+
+# How to do pie charts
+
+.pull-left[
+- If you absolutely MUST do a pie chart a guide can be found at this [link](https://www.geeksforgeeks.org/how-to-create-a-pie-chart-in-seaborn/).
+- A donut chart is a pie chart with a hole. It is even worse than a pie chart.
+]
+.pull-right[
+![](img/donut.png)
+]
+
+---
+
+
+class: middle, center, inverse
+
+# Numerical Data
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- Univariate plots are good.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+
+---
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

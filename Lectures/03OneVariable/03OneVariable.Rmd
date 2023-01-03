@@ -1,0 +1,294 @@
+---
+title: "Week 3:</br>Visualising</br>One Variable"
+author: "Visual Data Analytics"
+institute: "University of Sydney"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"../css/mtheme.css","../css/mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      before_body: ../auxil/defs.html
+---
+
+# Outline
+
+- Nominal/Ordinal Data
+  - Bar 
+  - Lollipop
+  - Pie/donut
+- Numeric data
+ - Box plot
+ - Histograms
+ - Kernel density
+
+```{r,include=FALSE}
+library(reticulate)
+use_python('~/anaconda3/bin/python3')
+matplotlib<-import('matplotlib')
+matplotlib$use("Agg",force=TRUE)
+knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
+```
+
+---
+
+# Motivation
+
+- Understand the distribution of a variable
+  - Find outliers
+  - Find multi-modality
+  - Find skew
+- Understanding the distribution is about generating interesting questions for further analysis.
+  
+---
+
+class: center, middle, inverse
+
+# Categorical variables
+
+---
+
+# The bar chart
+
+- The categories are displayed on one axis (usually x).
+- The *frequency* of each observation is displayed on the other axis (usually y).
+- The frequency is mapped to the *length* of each bar.
+- For this reason always include zero on the y axis.
+
+---
+
+# Examples
+
+- We will use two dataets that can be directly loaded from the `seaborn` package.
+  - The `taxis` dataset with data on pickup and drop off locations, fares, payment type etc., in New York City.
+  - The `diamonds` dataset with information on size, cut clarity, price, etc. of diamonds.
+- These contain nominal, ordinal and numeric variables.  
+
+---
+
+# Taxis data
+
+```{python,echo =T}
+
+import seaborn as sns
+taxisdat = sns.load_dataset('taxis')
+taxisdat
+```
+
+---
+
+# Bar plot of pick up
+
+```{python,echo =T, out.width="50%"}
+sns.countplot(data = taxisdat, x='pickup_borough')
+```
+
+---
+
+# Change orientation
+
+```{python,echo =T, out.width="50%"}
+sns.countplot(data = taxisdat, y='pickup_borough')
+```
+
+---
+
+
+# Order by frequency
+
+```{python,echo =T, out.width="50%"}
+sns.countplot(data = taxisdat, x='pickup_borough', order = taxisdat['pickup_borough'].value_counts().index)
+```
+
+Data are nominal - this is fine.
+
+---
+
+# Ordinal data
+
+- For nominal data it is suitable to order according to frequency.
+- This is not the case for ordinal data
+- Always  order according to categories of the variable.
+- Diamonds dataset has clarity as an ordinal variable
+  - Categories ordered as IF, VVS1, VVS2, VS1, VS2, SI1, SI2, I1.
+
+---
+
+# Diamonds data
+
+```{python,echo =T, out.width="45%"}
+diam = sns.load_dataset('diamonds')
+diam
+```
+
+---
+
+# Ordinal   
+
+```{python,echo =T, out.width="45%"}
+diam = sns.load_dataset('diamonds')
+sns.countplot(data=diam,x='clarity')
+```
+
+Categories ordered by levels of variable - this is fine.
+
+---
+
+#Incorrect plot
+
+```{python,echo =F, out.width="50%"}
+sns.countplot(data=diam,x='clarity', order = ['IF', 'I1', 'SI1', 'SI2', 'VS1', 'VS2', 'VVS1', 'VVS2'])
+```
+
+Incorrect. Categories in alphabetical order.
+
+---
+
+#Incorrect plot
+
+```{python,echo =F, out.width="50%"}
+sns.countplot(data=diam,x='clarity', order = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1'])
+```
+
+Incorrect. Ordered by frequency.
+
+---
+
+# Single color
+
+```{python,echo =T, out.width="50%"}
+diam = sns.load_dataset('diamonds')
+sns.countplot(data=diam,x='clarity',color='tab:blue')
+```
+
+---
+
+# Coloring
+
+- Although by default categories have different colors this is not strictly necessary.
+- Arguably it is distracting, especially when there are more categories.
+- Later on we will use color to display data
+  - For example grouping by a second variable and mapping that to color.
+- This will be covered later on.
+
+---
+
+# Lollipop charts
+
+- If there are 
+  - A large number of categories,
+  - If the categories all have similar frequncies,
+- then consider using a lollipop chart.
+- This can be done with some data munging using `value_counts` and the `stem` function in `matplotlib`.
+
+---
+
+# Data preparation
+
+For simpler graph, will only consider dropoff in Manhattan
+
+```{python, echo=T}
+freq = taxisdat[taxisdat['pickup_borough']=='Bronx'].value_counts('pickup_zone')
+freq
+```
+
+---
+
+# Lollipop plot (code)
+
+```{python, echo=T, eval=F}
+import matplotlib.pyplot as plt
+plt.stem(freq)
+plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.show()
+```
+
+---
+
+# Lollipop plot (output)
+
+```{python, echo=F, eval=T, out.width="60%", message = F, results='hide'}
+import matplotlib.pyplot as plt
+plt.stem(freq)
+plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.show()
+```
+
+---
+
+# Pie charts
+
+- Pie charts are considered to be poor practice by visualisation experts since
+  - It is difficult to compare sizes of angles.
+  - It is difficult to make comparisons unless categories are close.
+  - They do not handle large numbers of categories.
+- Following examples come from a [Business Insider article](https://www.businessinsider.com/pie-charts-are-the-worst-2013-6) by Walt Hickey.
+
+---
+
+# Pie chart
+
+![](img/piechart.webp)
+
+---
+
+# Bar chart
+
+![](img/barchart.webp)
+
+---
+
+
+# Pie chart
+
+![](img/eupie.webp)
+
+---
+
+# Bar chart
+
+![](img/eubar.webp)
+
+---
+
+# How to do pie charts
+
+.pull-left[
+- If you absolutely MUST do a pie chart a guide can be found at this [link](https://www.geeksforgeeks.org/how-to-create-a-pie-chart-in-seaborn/).
+- A donut chart is a pie chart with a hole. It is even worse than a pie chart.
+]
+.pull-right[
+![](img/donut.png)
+]
+
+---
+
+
+class: middle, center, inverse
+
+# Numerical Data
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- Univariate plots are good.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+
+---
