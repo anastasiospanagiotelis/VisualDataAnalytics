@@ -287,6 +287,18 @@ sns.stripplot(data = taxisdat, y = 'fare', x = 'pickup_borough')
 
 ---
 
+
+# Side by side swarm plots (slow)
+
+
+```python
+sns.swarmplot(data = taxisdat[taxisdat['dropoff_borough']=='Bronx'], y = 'fare', x = 'pickup_borough') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-11-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
 # Different plots
 
 - Boxplots clearly show that Manhattan has the lowest median fare and less volatility in the fare.
@@ -322,7 +334,7 @@ class: middle, center, inverse
 sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
 ```
 
-&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-11-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-12-15.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -332,10 +344,11 @@ sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance')
   - Frequent values around $50
   - Outliers
 - Relationship is positive and linear
-- There are some obervations with low distance but high fares.
+- There are some observations with low distance but high fares.
   - This could not be seen by only looking at each distribution individually.
 
 ---
+
 
 # Adding rug plot
 
@@ -345,7 +358,7 @@ sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance')
 sns.rugplot(data = taxisdat, y = 'fare', x = 'distance') 
 ```
 
-&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-12-15.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-13-17.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -358,7 +371,7 @@ sns.rugplot(data = taxisdat, y = 'fare', x = 'distance')
 sns.lmplot(data = taxisdat, y = 'fare', x = 'distance') 
 ```
 
-&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-13-17.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-14-19.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -368,6 +381,70 @@ sns.lmplot(data = taxisdat, y = 'fare', x = 'distance')
 - Even if you do not include regression lines, if there are natural choices of independent and dependent variable then use them on the x and y axes respectively.
 - For instance, in this example, distance determines price rather than the other way around.
 - Always remember that correlation does not imply causality.
+
+---
+
+# Example of negative correlation
+
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-15-21.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Example of non-linear relationship
+
+
+```python
+mpg = sns.load_dataset('mpg')
+sns.lmplot(data = mpg, y = 'mpg', x = 'displacement', lowess=True) 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-16-23.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+
+
+---
+# Smooth fit
+
+- The fitted line comes from the LOcal Weighted Estimated Scatterplot Smoothing (LOWESS) method.
+- This technique combines the idea of nearest neighbours with regression.
+- Nearest neighbours are found (along the x-axis)
+- A constant, linear or quadratic regression is fit to the nearest neighbours.
+
+---
+
+# Nearest Neighbours
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-18-25.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Nearest Neighbours
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Local fit
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Nearest Neighbours
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Details
+
+- In the LOWESS algorithm, the smoothing parameter we estimate a regression function ( `\(\hat{y}=f(x)\)` ) rather than a regression line.
+- The smoothness of this function can be tuned by changing the number of nearest  neigbours.
+- Local regressions estimated by weighted least squares so that closer neighbours are given more influence.
+- LOWESS is not ideal for large datasets.
 
 ---
 
@@ -384,10 +461,10 @@ sns.lmplot(data = taxisdat, y = 'fare', x = 'distance')
 
 
 ```python
-sns.relplot(data = taxisdat, y = 'fare', x = 'distance') 
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
 ```
 
-&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-14-19.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-22-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -399,7 +476,7 @@ sns.relplot(data = taxisdat, y = 'fare', x = 'distance')
 ## [None, None]
 ```
 
-&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-15-21.png" width="50%" style="display: block; margin: auto;" /&gt;
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-23-3.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -422,7 +499,109 @@ sns.relplot(data = taxisdat, y = 'fare', x = 'distance')
   - Transparent points.
   - Contour plot (of 2D KDE).
   - Binning.
-- Can demonstrate using diamonds data.
+- Can demonstrate using diamonds data (53940 observations).
+---
+
+# Scatterplot
+
+
+```python
+sns.scatterplot(data = diam, y = 'price', x = 'carat') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-24-5.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Overplotting
+
+- There are so many points in the region towards the bottom left of the plot that points are on top of one another.
+- This causes issues with how the plot is rendered.
+- It is difficult to tell where any modes are.
+- We will construct the same plot but with different strategies to deal with overplotting.
+
+---
+
+# Smaller points
+
+
+```python
+sns.scatterplot(data = diam, y = 'price', x = 'carat', s=1) 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-25-7.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Transparent points
+
+
+```python
+sns.scatterplot(data = diam, y = 'price', x = 'carat', alpha=0.1) 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-26-9.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Add KDE contours
+
+
+```python
+sns.scatterplot(data = diam, y = 'price', x = 'carat', s=1) 
+sns.kdeplot(data = diam, y = 'price', x = 'carat') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-27-11.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Two dimensional KDE
+
+- Kernel function now takes a vector as an input and returns a single number as an output.
+- Think of each kernel as a pile of sand on a table, and the value of the function is the height of the sand.
+- The contour lines give all the values of price and carat that evaluate to the same density value.
+- If any of you are familiar with elevation maps used in geography (e.g for mountain climbers), this is the same idea.
+
+---
+
+# With shading
+
+
+```python
+sns.kdeplot(data = diam, y = 'price', x = 'carat', shade = True) 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-28-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Binning
+
+- Recall a KDE is a smooth version of a histogram.
+- We can plot a "2D histogram" by binning the data into rectangles and using color to represent the frequncy of observations in each rectangle.
+- This can be useful for locating modes in bivariate data.
+
+---
+
+#Binning
+
+
+```python
+sns.displot(data = diam, y = 'price', x = 'carat') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-29-15.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Discussion
+
+- The advantage of binning (compared to a KDE) is that you can still see outliers
+- However the KDE is a "smoother" plot that can still be overlaid with a scatterplot.
+- Again there is no right or wrong plot, it depends on the story you want to tell.
+
 ---
 
 class: middle, center, inverse
@@ -433,10 +612,12 @@ class: middle, center, inverse
 
 # Conclusions
 
-- Visualising variables is important to 
-  - Understand the distribution of variables
-  - Find outliers
-  - Understand the relationship between variables
+- Visualising two variables helps us to understand about the distribution of the variables including
+  - Modes
+  - Outliers
+- In adddition we can understand more about the relationship between the two variables
+  - Direction of relationship.
+  - Whether relationship is linear
 - Log transformations can be useful to help visualise variables.
 - With big data, important to avoid overplotting.
 

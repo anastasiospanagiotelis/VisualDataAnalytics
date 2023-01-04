@@ -26,6 +26,8 @@ output:
  - Scatter plot
 
 ```{r,include=FALSE}
+library(tidyverse)
+library(ggplot2)
 library(reticulate)
 use_python('~/anaconda3/bin/python3')
 matplotlib<-import('matplotlib')
@@ -206,6 +208,15 @@ sns.stripplot(data = taxisdat, y = 'fare', x = 'pickup_borough')
 
 ---
 
+
+# Side by side swarm plots (slow)
+
+```{python,echo =T, out.width="50%"}
+sns.swarmplot(data = taxisdat[taxisdat['dropoff_borough']=='Bronx'], y = 'fare', x = 'pickup_borough') 
+```
+
+---
+
 # Different plots
 
 - Boxplots clearly show that Manhattan has the lowest median fare and less volatility in the fare.
@@ -248,10 +259,11 @@ sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance')
   - Frequent values around $50
   - Outliers
 - Relationship is positive and linear
-- There are some obervations with low distance but high fares.
+- There are some observations with low distance but high fares.
   - This could not be seen by only looking at each distribution individually.
 
 ---
+
 
 # Adding rug plot
 
@@ -281,6 +293,101 @@ sns.lmplot(data = taxisdat, y = 'fare', x = 'distance')
 
 ---
 
+# Example of negative correlation
+
+
+```{python,echo =F, out.width="50%"}
+import numpy as np
+from scipy.stats import multivariate_normal
+rv_mean = [0, 1]  # mean of x and y  
+rv_cov = [[1.0,-0.9], [-0.9,2.0]]  # covariance matrix of x and y
+rv = multivariate_normal.rvs(rv_mean, rv_cov, size=100)
+plt.clf()
+sns.scatterplot(y = rv[:,1], x = rv[:,0]) 
+```
+
+
+---
+
+# Example of non-linear relationship
+
+```{python,echo =T, out.width="50%"}
+mpg = sns.load_dataset('mpg')
+sns.lmplot(data = mpg, y = 'mpg', x = 'displacement', lowess=True) 
+```
+
+
+```{python,echo =F}
+plt.clf()
+```
+
+---
+# Smooth fit
+
+- The fitted line comes from the LOcal Weighted Estimated Scatterplot Smoothing (LOWESS) method.
+- This technique combines the idea of nearest neighbours with regression.
+- Nearest neighbours are found (along the x-axis)
+- A constant, linear or quadratic regression is fit to the nearest neighbours.
+
+---
+
+# Nearest Neighbours
+
+```{r}
+set.seed(6)
+k<-4
+q<-1
+x=runif(20)
+y=runif(20)
+d<-abs(x-x[q])
+c<-sort(d)[k+1]
+nn<-rep('x',20)
+nn[q]<-'x0'
+df<-tibble(x=x,y=y,nn=nn)
+ggplot(df,aes(x=x,col=nn))+geom_rug(size=1.5)+theme(legend.position = 'none')+scale_color_manual(values = c("#56B4E9", "#009E73"))+geom_point(data = df[2:20,],mapping = aes(x=x,y=y),size=3)
+```
+
+---
+
+#Nearest Neighbours
+
+```{r}
+nn[(d<=c)]<-'nn'
+nn[q]<-'x0'
+df<-tibble(x=x,y=y,nn=nn)
+ggplot(df,aes(x=x,col=nn))+geom_rug(size=1.5)+theme(legend.position = 'none')+geom_point(data = df[2:20,],mapping = aes(x=x,y=y,col=nn),size=3)+scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73"))
+```
+
+---
+
+# Local fit
+
+```{r, message=F}
+ggplot(df,aes(x=x,col=nn))+geom_rug(size=1.5)+theme(legend.position = 'none')+geom_point(data = df[2:20,],mapping = aes(x=x,y=y,col=nn),size=3)+scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73"))+geom_smooth(data = filter(df,nn=='nn'),mapping = aes(x=x,y=y),method = 'lm',se = F)
+```
+
+---
+
+#Nearest Neighbours
+
+```{r,message=F}
+lmloc<-lm(data = filter(df,nn=='nn'),y~x)
+y0<-predict.lm(lmloc,newdata = filter(df,nn=='x0'))%>%as.numeric
+df$y[q]<-y0
+ggplot(df,aes(x=x,col=nn))+geom_rug(size=1.5)+theme(legend.position = 'none')+geom_point(data = df[2:20,],mapping = aes(x=x,y=y,col=nn),size=3)+scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73"))+geom_smooth(data = filter(df,nn=='nn'),mapping = aes(x=x,y=y),method = 'lm',se = F)+geom_point(data = filter(df,nn=='x0'),mapping = aes(x=x,y=y),size=10,shape='x')
+```
+
+---
+
+#Details
+
+- In the LOWESS algorithm, the smoothing parameter we estimate a regression function ( $\hat{y}=f(x)$ ) rather than a regression line.
+- The smoothness of this function can be tuned by changing the number of nearest  neigbours.
+- Local regressions estimated by weighted least squares so that closer neighbours are given more influence.
+- LOWESS is not ideal for large datasets.
+
+---
+
 # Log transformations
 
 - For positively skewed data it is often worth looking a a log transformation
@@ -293,7 +400,7 @@ sns.lmplot(data = taxisdat, y = 'fare', x = 'distance')
 # Without transformation
 
 ```{python,echo =T, out.width="50%"}
-sns.relplot(data = taxisdat, y = 'fare', x = 'distance') 
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
 ```
 
 
@@ -331,7 +438,91 @@ plt.show()
   - Transparent points.
   - Contour plot (of 2D KDE).
   - Binning.
-- Can demonstrate using diamonds data.
+- Can demonstrate using diamonds data (53940 observations).
+---
+
+# Scatterplot
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = diam, y = 'price', x = 'carat') 
+```
+
+
+---
+
+# Overplotting
+
+- There are so many points in the region towards the bottom left of the plot that points are on top of one another.
+- This causes issues with how the plot is rendered.
+- It is difficult to tell where any modes are.
+- We will construct the same plot but with different strategies to deal with overplotting.
+
+---
+
+# Smaller points
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = diam, y = 'price', x = 'carat', s=1) 
+```
+
+---
+
+# Transparent points
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = diam, y = 'price', x = 'carat', alpha=0.1) 
+```
+
+---
+
+# Add KDE contours
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = diam, y = 'price', x = 'carat', s=1) 
+sns.kdeplot(data = diam, y = 'price', x = 'carat') 
+```
+
+---
+
+# Two dimensional KDE
+
+- Kernel function now takes a vector as an input and returns a single number as an output.
+- Think of each kernel as a pile of sand on a table, and the value of the function is the height of the sand.
+- The contour lines give all the values of price and carat that evaluate to the same density value.
+- If any of you are familiar with elevation maps used in geography (e.g for mountain climbers), this is the same idea.
+
+---
+
+# With shading
+
+```{python,echo =T, out.width="50%"}
+sns.kdeplot(data = diam, y = 'price', x = 'carat', shade = True) 
+```
+
+---
+
+# Binning
+
+- Recall a KDE is a smooth version of a histogram.
+- We can plot a "2D histogram" by binning the data into rectangles and using color to represent the frequncy of observations in each rectangle.
+- This can be useful for locating modes in bivariate data.
+
+---
+
+#Binning
+
+```{python,echo =T, out.width="50%"}
+sns.displot(data = diam, y = 'price', x = 'carat') 
+```
+
+---
+
+# Discussion
+
+- The advantage of binning (compared to a KDE) is that you can still see outliers
+- However the KDE is a "smoother" plot that can still be overlaid with a scatterplot.
+- Again there is no right or wrong plot, it depends on the story you want to tell.
+
 ---
 
 class: middle, center, inverse
@@ -342,10 +533,12 @@ class: middle, center, inverse
 
 # Conclusions
 
-- Visualising variables is important to 
-  - Understand the distribution of variables
-  - Find outliers
-  - Understand the relationship between variables
+- Visualising two variables helps us to understand about the distribution of the variables including
+  - Modes
+  - Outliers
+- In adddition we can understand more about the relationship between the two variables
+  - Direction of relationship.
+  - Whether relationship is linear
 - Log transformations can be useful to help visualise variables.
 - With big data, important to avoid overplotting.
 
