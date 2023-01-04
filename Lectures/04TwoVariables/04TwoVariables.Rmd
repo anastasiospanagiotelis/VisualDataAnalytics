@@ -1,0 +1,356 @@
+---
+title: "Week 4:</br>Visualising</br>Two Variables"
+author: "Visual Data Analytics"
+institute: "University of Sydney"
+output:
+  xaringan::moon_reader:
+    chakra: libs/remark-latest.min.js
+    lib_dir: libs
+    css: [default,"../css/mtheme.css","../css/mod.css"]
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    includes:
+      before_body: ../auxil/defs.html
+---
+
+# Outline
+
+- Categorical v Catgorical
+  - Side by side bar
+- Categorical v Numerical
+  - Side by side boxplots
+- Numeric v Numerical
+ - Scatter plot
+
+```{r,include=FALSE}
+library(reticulate)
+use_python('~/anaconda3/bin/python3')
+matplotlib<-import('matplotlib')
+matplotlib$use("Agg",force=TRUE)
+knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
+```
+
+---
+
+# Motivation
+
+- Understand the distributions of two variables
+  - Find outliers
+  - Find multi-modality
+  - Find skew
+- Also understand the relationship between the variables
+  
+  
+---
+
+class: center, middle, inverse
+
+# Categorical v Categorical variables
+
+---
+
+# Bar charts
+
+- To visualise two nominal/ordinal variables bar charts can still be used to plot the frequency of each category.
+- There are two options
+  - Grouped bar charts
+  - Stacked bar charts
+- We will investiate using the taxis and diamonds data also used last week.
+
+
+```{python}
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+taxisdat = sns.load_dataset('taxis')
+diam =sns.load_dataset('diamonds')
+```
+
+
+---
+
+#Grouped bar chart
+
+
+```{python,echo =T, out.width="50%"}
+sns.countplot(data=diam, x='clarity', hue='cut')
+```
+
+---
+
+# Grouped bar chart
+
+- Can easily make comparisons such as
+  - Fair diamonds are relatively more common for worse levels of clarity (e.g. SI2)
+  - For IF diamonds, these overwhelmingly have an ideal cut.
+- Harder to make a comparison for
+  - The most common category of clarity.
+
+---
+
+# Stacked bar chart
+
+First must prepare data by creating corss tab
+
+```{python,echo =T, out.width="50%"}
+diamct = pd.crosstab(diam['clarity'],diam['cut'])
+diamct
+```
+
+---
+
+
+# Stacked bar chart
+
+
+```{python,echo =T, out.width="50%"}
+diamct.plot(kind = 'bar', stacked = True)
+```
+
+---
+
+# Stacked bar chart
+
+- Can easily see
+  - Frequencies of categories for clarity
+  - Relative freqeuncy of cut within a single category of clarity
+- Harder to make a comparison for
+  - Frequency of cut across categories of clarity (e.g. hard to quickly tell if there are more Good/VS2 or Good/SI2)
+  
+---
+
+
+# Percentage stacked bar chart
+
+First must prepare data
+
+```{python,echo =T, out.width="50%"}
+diamct = pd.crosstab(diam['clarity'],diam['cut'], normalize='index')
+diamct
+```
+
+---
+
+
+# Stacked bar chart
+
+
+```{python,echo =T, out.width="50%"}
+diamct.plot(kind = 'bar', stacked = True)
+```
+
+---
+
+# Percentage stacked bar chart
+
+- Can easily see
+  - The relationship between cut and clarity
+- Harder to see
+  - Anything about the distribution of the categories
+
+---
+
+#Bar charts
+
+- Three options
+ - Grouped
+ - Stacked
+ - Percentage stacked
+- No one is right or wrong, it all depends on what you are trying to communicate.
+
+---
+
+class: middle, center, inverse
+
+# Categorical v Numeric
+
+
+---
+
+# Side-by-side
+
+- Will consider side-by-side
+  - Boxplots
+  - Violin plots
+  - (Jittered) rug plots
+- Seaborn syntax well suited to these
+
+---
+
+# Side by side boxplots
+
+```{python,echo =T, out.width="50%"}
+sns.boxplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+---
+
+
+# Side by side violin plots
+
+```{python,echo =T, out.width="50%"}
+sns.violinplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+---
+
+
+# Side by side strip plots
+
+```{python,echo =T, out.width="50%"}
+sns.stripplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+---
+
+# Different plots
+
+- Boxplots clearly show that Manhattan has the lowest median fare and less volatility in the fare.
+- Violin plots show three modes in the Queens distribution (cannot be seen using boxplots).
+- Strip plots show that frequent value at around $50 occurs for Manattan and Queens.
+- No single correct plot, use the plot that tells your story.
+
+---
+
+
+class: middle, center, inverse
+
+# Numerical v Numerical
+
+---
+
+# Scatter plot
+
+- The scatter plot plots one numerical variable on the x axis and the other on the y axis.
+- It is a very common plot and useful for
+  - Finding outliers
+  - Understanding the relationship between two variables.
+- We will also look at
+  - Log transformations
+  - Strategies for dealing with big data.
+
+---
+
+# Scatterplot
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+---
+
+# What do we see?
+
+- Can still see certain distributional characteristics
+  - Frequent values around $50
+  - Outliers
+- Relationship is positive and linear
+- There are some obervations with low distance but high fares.
+  - This could not be seen by only looking at each distribution individually.
+
+---
+
+# Adding rug plot
+
+```{python,echo =T, out.width="50%"}
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
+sns.rugplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+
+---
+
+# Adding regression line
+
+
+```{python,echo =T, out.width="50%"}
+sns.lmplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+---
+
+# Regression
+
+- We usually think of x as an independent variable and y as a dependent variable.
+- Even if you do not include regression lines, if there are natural choices of independent and dependent variable then use them on the x and y axes respectively.
+- For instance, in this example, distance determines price rather than the other way around.
+- Always remember that correlation does not imply causality.
+
+---
+
+# Log transformations
+
+- For positively skewed data it is often worth looking a a log transformation
+- It particularly makes sense for relationships best understood in terms of percentage changes
+  - For example prices change by 1%, demand changes by 5%. 
+- This transformation only works for positive data.
+
+---
+
+# Without transformation
+
+```{python,echo =T, out.width="50%"}
+sns.relplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+
+---
+
+# With transformation
+
+```{python,echo =F, out.width="50%", message = F}
+taxf=taxisdat[taxisdat['distance']!=0]
+f, ax = plt.subplots(figsize=(7, 7))
+ax.set(xscale="log", yscale="log")
+sns.scatterplot(data=taxf, y='fare',x='distance', ax=ax)
+plt.show()
+
+```
+
+
+---
+
+# Using log scales
+
+- Before using the log scale the values in the bottom left corner were too close to one another.
+- By using the log-log scale these values can be seen more clearly.
+- One thing to notice is that the fare has clusters around certain values.
+- You will cover using log scales in a tutorial.
+
+---
+
+# Overplotting
+
+- With datasets with a large number of observations, points are plotted on top of one another.
+- This is known as *overplotting*
+- There are a few strategies to avoid this
+  - Smaller points.
+  - Transparent points.
+  - Contour plot (of 2D KDE).
+  - Binning.
+- Can demonstrate using diamonds data.
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- Visualising variables is important to 
+  - Understand the distribution of variables
+  - Find outliers
+  - Understand the relationship between variables
+- Log transformations can be useful to help visualise variables.
+- With big data, important to avoid overplotting.
+
+---
+
+class: middle, center, inverse
+
+# Questions

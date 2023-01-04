@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 4:VisualisingTwo Variables</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 4:</br>Visualising</br>Two Variables
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Categorical v Catgorical
+  - Side by side bar
+- Categorical v Numerical
+  - Side by side boxplots
+- Numeric v Numerical
+ - Scatter plot
+
+
+
+---
+
+# Motivation
+
+- Understand the distributions of two variables
+  - Find outliers
+  - Find multi-modality
+  - Find skew
+- Also understand the relationship between the variables
+  
+  
+---
+
+class: center, middle, inverse
+
+# Categorical v Categorical variables
+
+---
+
+# Bar charts
+
+- To visualise two nominal/ordinal variables bar charts can still be used to plot the frequency of each category.
+- There are two options
+  - Grouped bar charts
+  - Stacked bar charts
+- We will investiate using the taxis and diamonds data also used last week.
+
+
+
+
+
+---
+
+#Grouped bar chart
+
+
+
+```python
+sns.countplot(data=diam, x='clarity', hue='cut')
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-3-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Grouped bar chart
+
+- Can easily make comparisons such as
+  - Fair diamonds are relatively more common for worse levels of clarity (e.g. SI2)
+  - For IF diamonds, these overwhelmingly have an ideal cut.
+- Harder to make a comparison for
+  - The most common category of clarity.
+
+---
+
+# Stacked bar chart
+
+First must prepare data by creating corss tab
+
+
+```python
+diamct = pd.crosstab(diam['clarity'],diam['cut'])
+diamct
+```
+
+```
+## cut      Ideal  Premium  Very Good  Good  Fair
+## clarity                                       
+## IF        1212      230        268    71     9
+## VVS1      2047      616        789   186    17
+## VVS2      2606      870       1235   286    69
+## VS1       3589     1989       1775   648   170
+## VS2       5071     3357       2591   978   261
+## SI1       4282     3575       3240  1560   408
+## SI2       2598     2949       2100  1081   466
+## I1         146      205         84    96   210
+```
+
+---
+
+
+# Stacked bar chart
+
+
+
+```python
+diamct.plot(kind = 'bar', stacked = True)
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-5-3.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Stacked bar chart
+
+- Can easily see
+  - Frequencies of categories for clarity
+  - Relative freqeuncy of cut within a single category of clarity
+- Harder to make a comparison for
+  - Frequency of cut across categories of clarity (e.g. hard to quickly tell if there are more Good/VS2 or Good/SI2)
+  
+---
+
+
+# Percentage stacked bar chart
+
+First must prepare data
+
+
+```python
+diamct = pd.crosstab(diam['clarity'],diam['cut'], normalize='index')
+diamct
+```
+
+```
+## cut         Ideal   Premium  Very Good      Good      Fair
+## clarity                                                   
+## IF       0.677095  0.128492   0.149721  0.039665  0.005028
+## VVS1     0.560055  0.168536   0.215869  0.050889  0.004651
+## VVS2     0.514410  0.171733   0.243782  0.056455  0.013620
+## VS1      0.439236  0.243422   0.217232  0.079305  0.020805
+## VS2      0.413689  0.273862   0.211372  0.079785  0.021292
+## SI1      0.327746  0.273632   0.247991  0.119403  0.031228
+## SI2      0.282576  0.320753   0.228410  0.117577  0.050685
+## I1       0.197031  0.276653   0.113360  0.129555  0.283401
+```
+
+---
+
+
+# Stacked bar chart
+
+
+
+```python
+diamct.plot(kind = 'bar', stacked = True)
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-7-5.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Percentage stacked bar chart
+
+- Can easily see
+  - The relationship between cut and clarity
+- Harder to see
+  - Anything about the distribution of the categories
+
+---
+
+#Bar charts
+
+- Three options
+ - Grouped
+ - Stacked
+ - Percentage stacked
+- No one is right or wrong, it all depends on what you are trying to communicate.
+
+---
+
+class: middle, center, inverse
+
+# Categorical v Numeric
+
+
+---
+
+# Side-by-side
+
+- Will consider side-by-side
+  - Boxplots
+  - Violin plots
+  - (Jittered) rug plots
+- Seaborn syntax well suited to these
+
+---
+
+# Side by side boxplots
+
+
+```python
+sns.boxplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-8-7.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Side by side violin plots
+
+
+```python
+sns.violinplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-9-9.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Side by side strip plots
+
+
+```python
+sns.stripplot(data = taxisdat, y = 'fare', x = 'pickup_borough') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-10-11.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Different plots
+
+- Boxplots clearly show that Manhattan has the lowest median fare and less volatility in the fare.
+- Violin plots show three modes in the Queens distribution (cannot be seen using boxplots).
+- Strip plots show that frequent value at around $50 occurs for Manattan and Queens.
+- No single correct plot, use the plot that tells your story.
+
+---
+
+
+class: middle, center, inverse
+
+# Numerical v Numerical
+
+---
+
+# Scatter plot
+
+- The scatter plot plots one numerical variable on the x axis and the other on the y axis.
+- It is a very common plot and useful for
+  - Finding outliers
+  - Understanding the relationship between two variables.
+- We will also look at
+  - Log transformations
+  - Strategies for dealing with big data.
+
+---
+
+# Scatterplot
+
+
+```python
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-11-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What do we see?
+
+- Can still see certain distributional characteristics
+  - Frequent values around $50
+  - Outliers
+- Relationship is positive and linear
+- There are some obervations with low distance but high fares.
+  - This could not be seen by only looking at each distribution individually.
+
+---
+
+# Adding rug plot
+
+
+```python
+sns.scatterplot(data = taxisdat, y = 'fare', x = 'distance') 
+sns.rugplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-12-15.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Adding regression line
+
+
+
+```python
+sns.lmplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-13-17.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Regression
+
+- We usually think of x as an independent variable and y as a dependent variable.
+- Even if you do not include regression lines, if there are natural choices of independent and dependent variable then use them on the x and y axes respectively.
+- For instance, in this example, distance determines price rather than the other way around.
+- Always remember that correlation does not imply causality.
+
+---
+
+# Log transformations
+
+- For positively skewed data it is often worth looking a a log transformation
+- It particularly makes sense for relationships best understood in terms of percentage changes
+  - For example prices change by 1%, demand changes by 5%. 
+- This transformation only works for positive data.
+
+---
+
+# Without transformation
+
+
+```python
+sns.relplot(data = taxisdat, y = 'fare', x = 'distance') 
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-14-19.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# With transformation
+
+
+```
+## [None, None]
+```
+
+&lt;img src="04TwoVariables_files/figure-html/unnamed-chunk-15-21.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Using log scales
+
+- Before using the log scale the values in the bottom left corner were too close to one another.
+- By using the log-log scale these values can be seen more clearly.
+- One thing to notice is that the fare has clusters around certain values.
+- You will cover using log scales in a tutorial.
+
+---
+
+# Overplotting
+
+- With datasets with a large number of observations, points are plotted on top of one another.
+- This is known as *overplotting*
+- There are a few strategies to avoid this
+  - Smaller points.
+  - Transparent points.
+  - Contour plot (of 2D KDE).
+  - Binning.
+- Can demonstrate using diamonds data.
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- Visualising variables is important to 
+  - Understand the distribution of variables
+  - Find outliers
+  - Understand the relationship between variables
+- Log transformations can be useful to help visualise variables.
+- With big data, important to avoid overplotting.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
