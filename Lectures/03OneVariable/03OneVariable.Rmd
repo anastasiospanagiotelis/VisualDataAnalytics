@@ -55,7 +55,7 @@ class: center, middle, inverse
 
 # The bar chart
 
-- The categories are displayed on one axis (usually x).
+- Categories displayed on one axis (usually x).
 - The *frequency* of each observation is displayed on the other axis (usually y).
 - The frequency is mapped to the *length* of each bar.
 - For this reason always include zero on the y axis.
@@ -111,7 +111,7 @@ Data are nominal - this is fine.
 
 # Ordinal data
 
-- For nominal data it is suitable to order according to frequency.
+- For nominal data it is suitable, to order according to frequency.
 - This is not the case for ordinal data
 - Always  order according to categories of the variable.
 - Diamonds dataset has clarity as an ordinal variable
@@ -152,7 +152,7 @@ Incorrect. Categories in alphabetical order.
 #Incorrect plot
 
 ```{python,echo =F, out.width="50%"}
-sns.countplot(data=diam,x='clarity', order = ['IF', 'VVS1', 'VVS2', 'VS1', 'VS2', 'SI1', 'SI2', 'I1'])
+sns.countplot(data=diam,x='clarity', order = ['I1', 'IF', 'VVS1', 'VVS2', 'VS1', 'SI2', 'VS2', 'SI1' ])
 ```
 
 Incorrect. Ordered by frequency.
@@ -268,10 +268,296 @@ plt.show()
 
 ---
 
+# Treemaps
+
+- Even bar charts can struggle when the number of categories is truly huge.
+- One way to handle this is using a *treemap*.
+- See [this example](https://www.datarevelations.com/in-praise-of-treemaps/)
+- These are particularly well suited when categories follow a hierarchy.
+- The following example considers Swiss exports that are classified into 12 categories and 48 subcategories.
+
+---
+
+# Swiss Exports
+
+![](img/Swiss.png)
+
+---
 
 class: middle, center, inverse
 
 # Numerical Data
+
+---
+
+# Histogram
+
+- The equivalent of a bar chart for numerical data is a histogram.
+- The area of each bar represents the frequency within a certain interval.
+- If all bars have equal width then frquency is mapped to the length of the bars too.  
+- Zero should always be included on the y axis (but not necessarily x axis).
+
+---
+
+# Histogram
+
+```{python,echo =T, out.width="50%"}
+sns.histplot(taxisdat['fare'])
+```
+
+---
+
+#What do we see?
+
+- Right skew
+  - Should we use mean or median as measure of central tendency?
+- A few big outliers.
+- A spike (second 'mode') at around $50
+  - Could represent a fixed fee (e.g. from airport).
+
+---
+
+# Change number of bins
+
+```{python,echo =T, out.width="50%"}
+sns.histplot(taxisdat['fare'], bins=10)
+```
+
+---
+
+# Change number of bins
+
+```{python,echo =T, out.width="50%"}
+sns.histplot(taxisdat['fare'], bins=2000)
+```
+
+---
+
+# Lessons
+
+- By having too many (or too few) bins we can miss out on important features of data.
+- In the above example the spike of fares around $50 is not seen when the number of bins is changed.
+- In general default choice of bin number is good, howver it is always a good idea to experiment.
+
+---
+
+# Kernel density estimate (KDE)
+
+- A kernel density estimates the *probability density function (pdf)* of data.
+- For data $x_1,x_2,\dots,x_n$ the KDE is given by
+
+$$\hat{f}(x)=\frac{1}{n}\sum\limits_{i=1}^{n} K_h(x-x_i)$$
+- The function $K_h(.)$ is called the *kernel*.
+- Can take many form.
+- The function depends on a bandwidth $h$ (to be explained soon).
+
+---
+
+# Intuition behind KDE
+
+- If I observe a point in some location, that evidence supports that there is probability that a point comes from a nearby region.
+- Imagine I drop a mountain of sand at the location I observe the point.
+- The shape of the sand is the kernel function.
+- If I repeat this for $n$ observations the result is the KDE.
+
+---
+
+# KDE (n-1)
+
+```{r}
+
+x<-9
+
+kde<-density(x, bw=0.5)
+
+plot(kde, main='', xlim=c(0,10))
+points(9,0,col='red')
+```
+
+---
+
+# KDE (n=2)
+
+```{r}
+
+x<-c(1,9)
+
+kde<-density(x, bw=0.5)
+
+plot(kde, main='', xlim=c(0,10))
+points(1,0,col='red')
+
+```
+
+---
+
+# KDE (n=3)
+
+```{r}
+
+x<-c(1,4.1,9)
+
+kde<-density(x, bw=0.5)
+
+plot(kde, main='', xlim=c(0,10))
+points(4.1,0,col='red')
+
+```
+
+---
+
+# KDE (n=4)
+
+```{r}
+
+x<-c(1,4.1,5,9)
+
+kde<-density(x, bw=0.5)
+
+plot(kde, main='', xlim=c(0,10))
+points(5,0,col='red')
+
+```
+
+---
+
+# KDE (n=20)
+
+```{r}
+
+x<-c(1,4.1,5,9,rnorm(16,5,3))
+
+kde<-density(x, bw=0.5)
+
+plot(kde, main='', xlim=c(0,10))
+points(x[5:20],rep(0,16),col='red')
+
+```
+
+---
+
+# The bandwidth
+
+- The bandwidth $h$ controls whether the mountain of sand is 'peaked' or 'flat' .
+- For small bandwidth the mountain of sand is more peaked and the KDE is more wiggly.
+- For large bandwidth the mountain of sand is more flat and the KDE is more smooth.
+- There are sensible defaults used by visualisation packages.
+
+---
+
+#KDE plot
+
+
+```{python,echo =T, out.width="50%"}
+sns.kdeplot(taxisdat['fare'])
+```
+
+---
+
+#KDE plot (double default BW)
+
+
+```{python,echo =T, out.width="50%"}
+sns.kdeplot(taxisdat['fare'], bw_adjust = 2)
+```
+
+---
+
+#KDE plot (half default BW)
+
+
+```{python,echo =T, out.width="50%"}
+sns.kdeplot(taxisdat['fare'], bw_adjust = 0.5)
+```
+
+---
+
+
+# Violin plot
+
+- A violin plot mirrors a KDE and fills it in.
+- It is particularly useful for making comparisons of density according to a grouping variable. 
+- We will cover this next week.
+
+---
+
+
+#Violin plot
+
+
+```{python,echo =T, out.width="50%"}
+sns.violinplot(taxisdat['fare'])
+```
+
+---
+
+# Boxplot
+
+- Inside the violin plot is a boxplot.
+- The boxplot is a summary of five statistics
+  - Median
+  - First Quartile
+  - Third Quartile
+  - Minimum
+  - Maximum
+
+---
+
+
+
+#Box plot
+
+
+```{python,echo =T, out.width="50%"}
+sns.boxplot(taxisdat['fare'])
+```
+
+
+---
+
+# Fences
+
+- For most implementations, a boxplot actually shows an upper and lower fence rather than the maximum and minimum.
+- The upper (lower) fence is given by the median plus (minus) 1.5 times the IQR.
+- The maximum (minimum) is shown instead if it is less (greater) than the upper (lower) fence.
+
+---
+
+# Boxplots v KDE
+
+- Note that in this example the spike at around $50 is lost in the boxplot.
+- However it is clearer that there are four outliers above $110.
+- There is no right and wrong answer, it all depends on what you are trying to visualise.
+
+---
+
+# Rug plot
+
+- The final plot we will consider is a rug plot.
+- The rug plot can highlight outliers. 
+- It is harder to understand the shape of the distribution using a rug plot, especially for large sample sizes.
+- As a univariate plot, a jittered rug plot (strip plot) works better.
+
+---
+
+# Rug plot
+
+
+```{python,echo =T, out.width="50%"}
+sns.rugplot(taxisdat['fare'])
+```
+
+
+---
+
+
+# Rug plot (jittered)
+
+
+```{python,echo =T, out.width="50%"}
+sns.stripplot(y=taxisdat['fare'])
+```
+
 
 ---
 
@@ -283,12 +569,15 @@ class: middle, center, inverse
 
 # Conclusions
 
-- Univariate plots are good.
+- Univariate plots are useful for
+  - Understanding distribution of a variable
+  - Finding outliers
+  - Finding frequent values
+  - Seeing whether data are skewed.
+- Always remember that univariate plots generate questions. To answer these questions requires domain knowledge and further analysis.
 
 ---
 
 class: middle, center, inverse
 
 # Questions
-
----
