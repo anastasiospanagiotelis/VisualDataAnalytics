@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 6:VisualisingTime Series</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 6:</br>Visualising</br>Time Series
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Lineplots
+  - Time series features
+  - Issues with y axis
+  - Issues with x axis
+- Python stuff
+  - Dealing with dates
+  - Plotting time series
+
+
+
+---
+
+# Motivation
+
+- Times series are common in business.
+- Traditionally time series data in business were measured at low frequency (e.g. yearly, monthly, quarterly)
+  - Inflation
+  - Yearly sales
+- Increasingly high-frequency data (daily, hourly, microsecond) are available.
+  - Individual transactions data
+- Business data are distinct in that they heavily influenced by calendar effects.
+
+
+
+
+
+---
+
+
+# The line plot
+
+- The line plot is the most common plot of a time series
+- It shows a single variable on the vertical axis against time on the horizontal axis
+- Using this plot we can see
+  - Trend
+  - Seasonal patterns
+  - Calendar effects
+  - Outliers
+  - Volatility clustering
+  
+---
+
+# Yearly data
+
+
+```python
+hle = sns.load_dataset('healthexp')
+hleusa = hle[hle['Country']=='USA']
+sns.lineplot(data = hleusa, x='Year', y='Life_Expectancy')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-3-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Trend
+
+- This is an example of data with a trend.
+- Life expectancy goes up over time.
+- There is no seasonality (regular repeating pattern).
+- There are no cycles (irregular repeating pattern).
+
+---
+
+# Cycles
+
+
+```python
+dj = sns.load_dataset('dowjones')
+g = sns.lineplot(data=dj, x = 'Date', y = 'Price')
+g.xaxis.set_major_locator(ticker.LinearLocator(6))
+plt.show()
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-4-3.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Trend and Cycle
+
+- As well as trend, the series goes up and down.
+- These are known as *cycles*.
+- The cycles are irregular
+  - Some are longer than others
+  - The peaks and troughs are not always the same size and do not grow or shrink in a systematic way.
+
+---
+
+# Seasonality
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-5-5.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Seasonality
+
+- The data roughly repeat every 12 periods.
+- The pattern is amplified over time (which is in line with the increasing trend of the data).
+- For higher frequncy data there may be multiple seasonalities (e.g, day of week and month of year).
+
+---
+
+# Stocks v flows
+
+- So-called *stocks* represent data measured at a single instant of time, *flows* represent changes to a stock over a period of time.
+- The amount of money in my bank account is a stock, my spending during the week is a flow.
+- This motivates looking at first differences, or percentage changes in data.
+
+
+---
+
+# Plotting Change 
+
+
+```python
+hleusa['LEChange'] = hleusa["Life_Expectancy"].diff()
+sns.lineplot(data = hleusa, x='Year', y='LEChange')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-6-7.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Percentage Change 
+
+
+```python
+hleusa['LE%Change'] = hleusa["Life_Expectancy"].pct_change()
+sns.lineplot(data = hleusa, x='Year', y='LE%Change')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-7-9.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Autocorrelation
+
+- When discussing time series, the concept of *autocorrelation* is important.
+- This is the idea that a time series is correlated with its own past values.
+- Line plots can indicate whether data are *positively*, correlated, *negatively* correlated or *not* correlated.
+- Here are some synthetic examples.
+
+---
+
+# Postively correlated
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-8-11.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Negatively correlated
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-9-13.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Not autocorrelated
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-10-15.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Inerpreting autocorrelation
+
+- For positively autocorrelated data, there will be *runs* where the series is above or below its mean.
+- For negatively autocorrelated data, the series *oscillates* above and below the mean.
+- For data with no autocorrelation, the series does not have these patterns.
+
+---
+
+#Scatterplot
+
+- A scatterplot of a variable against its first lag can aso indicate positive autocorrelation
+- A scatterplot against other lags can show seasonality
+- There are other ways to plot the autocorrelation function that are covered in other courses on time series,
+
+---
+
+#First lag
+
+
+```python
+flights['firstlag']=flights['passengers'].shift()
+sns.scatterplot(data=flights, x = 'firstlag', y = 'passengers')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-11-17.png" width="50%" style="display: block; margin: auto;" /&gt;
+---
+
+# Lag twelve
+
+
+```python
+flights['lag12']=flights['passengers'].shift(12)
+sns.scatterplot(data=flights, x = 'lag12', y = 'passengers')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-12-19.png" width="50%" style="display: block; margin: auto;" /&gt;
+---
+
+# Volatility clustering
+
+- Sometimes there is no correlation in the mean, but there is correlation in the variance
+  - Volatile periods more likely to follow volatile periods
+  - Calm periods more likely to follow calm periods
+- This can be seen using a line plot
+- It is common with financial returns data
+
+
+---
+
+```python
+dj['Returns']=dj['Price'].pct_change()
+g = sns.lineplot(data=dj, x = 'Date', y = 'Returns')
+g.xaxis.set_major_locator(ticker.LinearLocator(6))
+plt.show()
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-13-21.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, center, inverse
+
+# Issues with axes
+
+
+---
+
+# Should zero be on y axis?
+
+- Using a wide or narrow y-axis can be used to exaggerate changes in a line plot
+- It is often said that zero MUST be included on the y axis
+- This depends on *context*
+---
+
+# Climate graph
+
+![](img/Mean-Temp-1.jpg)
+
+---
+
+# Climate graph
+
+![](img/1_Mean-Temp-4.png)
+
+---
+
+# Line v bar
+
+- For a line plot, to decide whether to include zero, think about whether 0 is a sensible value for the y-variable to take.
+- Before the Holocene, you could walk from here to Tasmania and North America was under 4km of ice.
+- Note that for bar plots, it is more natural to interpret length of the bar rather than position on the y axis.
+- For bar plots always include zero
+
+---
+
+# Better as line plot
+
+
+![](img/cord-cutters.jpg)
+
+Likely to be misinterpreted.
+
+---
+
+# The x-axis
+
+- Similarly the context of the x-axis is important.
+- To understand whether a change is big or small, it is important to look at a suitable range of data.
+- The following is an example with stock prices of the Commonwealth Bank of Australia (CBA).
+- The following show the price of CBA shares over a five day period and a five year period.
+
+---
+
+# A big change?
+
+![](img/CBAfivedays.png)
+
+---
+
+# Same data for five years
+
+![](img/CBAfiveyears.png)
+
+---
+
+# Both axes
+
+- Another way to manipulate interpretations is through the *aspect ratio*.
+- The aspect ratio is the ratio of units on the y axis relateive to units on the x axis.
+- By resizing a plot, features of the time series may be exaggerated (either intentionally or unintentionally).
+
+---
+
+# Wide 
+
+
+```python
+fig, ax = plt.subplots(figsize = (40,4) )
+sns.lineplot(data = hleusa, x='Year', y='LEChange')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-14-23.png" width="3840" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Long
+
+
+```python
+fig, ax = plt.subplots(figsize = (3,5) )
+sns.lineplot(data = hleusa, x='Year', y='LEChange')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-15-25.png" width="288" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Banking to 45
+
+- As a rough guide, consider lines making up a line plot.
+- The average angle of these should be about 45 degrees
+- Good software packages will do this by default.
+- If you reseize an image things may change.
+- Always look at the axes of a line plot!
+
+---
+
+# Dual y axes
+
+![](img/dualy.png)
+
+---
+
+# Problems
+
+- Natural to look at and interpret 'crossing points'
+- Crossing point nearly always meaningless;
+  - Arbitrarily defined by changing y axis,
+  - Could be different if different units are used.
+- Put multiple lines on a lineplot ONLY when all variables measured in same units.
+
+---
+
+class: middle, center, inverse
+
+# Dealing with dates
+
+---
+
+# Date type in Python
+
+The `datetime` module in Python provides a data type specifically for dealing with dates and times. 
+
+
+```python
+import datetime
+x=datetime.datetime.now()
+y=datetime.datetime(2008, 3, 16)
+print(x)
+```
+
+```
+## 2023-01-12 19:17:37.113537
+```
+
+```python
+print(y)
+```
+
+```
+## 2008-03-16 00:00:00
+```
+
+---
+
+# Intervals
+
+A `timedelta` is the difference between two dates
+
+
+```python
+print(x-y)
+```
+
+```
+## 5415 days, 19:17:37.113537
+```
+
+An interval can be added to a date
+
+
+```python
+print(y)
+```
+
+```
+## 2008-03-16 00:00:00
+```
+
+```python
+print(y+datetime.timedelta(days=10))
+```
+
+```
+## 2008-03-26 00:00:00
+```
+
+---
+
+# Datasets
+
+- We will look at two datasets
+  - The taxis data set from seaborn
+  - A dataset  from the Australian Energy Market Operator of electricity demand in thirty minute intervals for five regions of Australia on the 18th-24th September 2022.
+
+---
+
+# Reading in data
+
+
+```python
+import pandas as pd
+elec = pd.read_csv('../data/electricity.csv')
+elec
+```
+
+```
+##      REGIONID    INTERVAL_DATETIME  OPERATIONAL_DEMAND
+## 0        NSW1  2022/09/18 00:00:00                7568
+## 1        QLD1  2022/09/18 00:00:00                5575
+## 2         SA1  2022/09/18 00:00:00                1578
+## 3        TAS1  2022/09/18 00:00:00                1071
+## 4        VIC1  2022/09/18 00:00:00                5349
+## ...       ...                  ...                 ...
+## 1675     NSW1  2022/09/24 23:30:00                7561
+## 1676     QLD1  2022/09/24 23:30:00                5694
+## 1677      SA1  2022/09/24 23:30:00                1428
+## 1678     TAS1  2022/09/24 23:30:00                1184
+## 1679     VIC1  2022/09/24 23:30:00                5137
+## 
+## [1680 rows x 3 columns]
+```
+
+---
+
+# Converting to date
+
+Dates may not be read in as dates
+
+
+```python
+elec.dtypes
+```
+
+```
+## REGIONID              object
+## INTERVAL_DATETIME     object
+## OPERATIONAL_DEMAND     int64
+## dtype: object
+```
+
+Can convert using `to_datetime`
+
+
+```python
+elec['INTERVAL_DATETIME'] = pd.to_datetime(elec['INTERVAL_DATETIME'])
+elec.dtypes
+```
+
+```
+## REGIONID                      object
+## INTERVAL_DATETIME     datetime64[ns]
+## OPERATIONAL_DEMAND             int64
+## dtype: object
+```
+
+---
+
+# Conversion
+
+Convert dates to strings with formats [ here](https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes)
+
+
+```python
+datetime.datetime.strftime(y,'%a %d-%B-%Y')
+```
+
+```
+## 'Sun 16-March-2008'
+```
+
+```python
+datetime.datetime.strftime(y,'%B %d, %y')
+```
+
+```
+## 'March 16, 08'
+```
+
+And convert back
+
+
+```python
+print(datetime.datetime.strptime('December 10, 22','%B %d, %y'))
+```
+
+```
+## 2022-12-10 00:00:00
+```
+
+---
+
+
+class: middle, center, inverse
+
+# More Python plotting
+
+---
+
+
+# NSW electricity demand
+
+
+```python
+fig, ax = plt.subplots()
+g = sns.lineplot(data = elec[elec['REGIONID']=='NSW1'],x='INTERVAL_DATETIME', y = 'OPERATIONAL_DEMAND')
+g.xaxis.set_major_locator(ticker.LinearLocator(6))
+plt.show()
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-24-27.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What do we see?
+
+- Some seasonality
+  - Reflects patterns of usage throughout the day
+- No upwards or downwards trend
+  - Make sense since data is only measured over a week
+- Can we visualise differently?
+
+---
+
+# Seasonal plot
+
+
+```python
+elec['TIME']=elec['INTERVAL_DATETIME'].dt.strftime('%H:%M') 
+elec['DAY']=elec['INTERVAL_DATETIME'].dt.strftime('%a %d-%b') 
+g = sns.lineplot(data = elec[elec['REGIONID']=='NSW1'],x='TIME', y = 'OPERATIONAL_DEMAND', hue='DAY') 
+g.xaxis.set_major_locator(ticker.LinearLocator(8))
+plt.show()
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-25-29.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What do we see?
+
+- Two peaks
+  - Small one in morning
+  - Larger one in evening
+- Why no early peak on Sunday?
+- Why is there a small afternoon peak on the Saturday?
+
+---
+
+# An example with taxi data
+
+- The taxi data contains event data
+- We can construct a daily series of number of taxi trips
+- This requires some data preparation and conversion between datetimes and dates
+
+---
+
+# Data preparation
+
+
+```python
+
+taxisdat = sns.load_dataset('taxis')
+taxisdat['timestamp'] = pd.to_datetime(taxisdat['pickup'])
+taxisdat['date'] = taxisdat['timestamp'].dt.strftime('%Y/%m/%d')
+taxists = taxisdat.groupby('date').size().reset_index(name='trips')
+taxists['date'] = pd.to_datetime(taxists['date'])
+taxists
+```
+
+```
+##          date  trips
+## 0  2019-02-28      1
+## 1  2019-03-01    241
+## 2  2019-03-02    198
+## 3  2019-03-03    169
+## 4  2019-03-04    171
+## 5  2019-03-05    228
+## 6  2019-03-06    257
+## 7  2019-03-07    218
+## 8  2019-03-08    235
+## 9  2019-03-09    204
+## 10 2019-03-10    185
+## 11 2019-03-11    209
+## 12 2019-03-12    218
+## 13 2019-03-13    244
+## 14 2019-03-14    260
+## 15 2019-03-15    201
+## 16 2019-03-16    220
+## 17 2019-03-17    178
+## 18 2019-03-18    173
+## 19 2019-03-19    201
+## 20 2019-03-20    233
+## 21 2019-03-21    221
+## 22 2019-03-22    229
+## 23 2019-03-23    209
+## 24 2019-03-24    149
+## 25 2019-03-25    155
+## 26 2019-03-26    178
+## 27 2019-03-27    232
+## 28 2019-03-28    205
+## 29 2019-03-29    209
+## 30 2019-03-30    215
+## 31 2019-03-31    187
+```
+
+---
+
+# Lineplot
+
+
+```python
+sns.lineplot(data = taxists, x='date', y='trips')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-27-31.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What do you see?
+
+- The very first observation is an outlier
+- There is also a weekly pattern
+- Don't forget that time series data is like all other data. We can use plots *other* than line plots!
+
+---
+
+# An example
+
+
+
+```python
+
+taxisdat['datehour'] = pd.to_datetime(taxisdat['pickup']).dt.strftime('%Y/%m/%d %H')
+taxish = taxisdat.groupby('datehour').agg({'fare':'mean','distance':'mean'})
+taxish['hour'] = taxish.index.str[-2:].astype(int)
+taxish
+```
+
+```
+##                     fare  distance  hour
+## datehour                                
+## 2019/02/28 23   5.000000  0.900000    23
+## 2019/03/01 00  12.625000  3.286250     0
+## 2019/03/01 01   5.000000  1.000000     1
+## 2019/03/01 02   9.833333  2.480000     2
+## 2019/03/01 04   5.833333  1.250000     4
+## ...                  ...       ...   ...
+## 2019/03/31 19   8.900000  1.691000    19
+## 2019/03/31 20  11.250000  2.758333    20
+## 2019/03/31 21  17.000000  4.748750    21
+## 2019/03/31 22  10.625000  2.422500    22
+## 2019/03/31 23  24.250000  7.640000    23
+## 
+## [711 rows x 3 columns]
+```
+
+---
+
+# Plot
+
+
+```python
+sns.scatterplot(data = taxish, x = 'distance', y = 'fare', hue = 'hour', palette = 'twilight')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-29-33.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Another example
+
+
+```python
+
+taxisdat['day'] = pd.to_datetime(taxisdat['pickup']).dt.strftime('%a')
+sns.kdeplot(data = taxisdat, x='fare', hue='day')
+```
+
+&lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-30-35.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- The most common plot for time series is the lineplot
+  - Can understand time series patterns such as trends, cycles and seasonality.
+  - Can find outliers
+  - Can understand autocorrelation properties.
+- Important to manipulate dates
+  - Can get more creative with visualisations.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
