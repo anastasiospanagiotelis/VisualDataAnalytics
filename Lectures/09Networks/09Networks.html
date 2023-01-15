@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 9:VisualisingNetworks</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 9:</br>Visualising</br>Networks
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Graph theory
+  - Graphs
+  - All about edges
+  - All about nodes
+- Bipartite graphs
+
+
+
+---
+
+
+
+# Motivation
+
+- Networks are ubiquitous in business applications
+  - Supply chains
+  - Social networks
+  - International trade
+- Networks can be understood and visualised using graph theory.
+
+
+
+---
+
+# Network v Graph
+
+- A *network* is a real system consisting of some entities and the relationships between them.
+- A *graph* is an abstract mathematical construct that can describe networks.
+- Note that this week we use *graph* with a specific mathematical meaning, and not in the everyday sense of graphs as different visualisations (e.g histograms and scatterplots).
+
+---
+
+class: middle, center, inverse
+
+# Graph theory
+
+---
+
+# Definition
+
+- A graph is made up of two sets
+  - A set of vertices `\(\mathcal{V}\)`
+  - A set of edges `\(\mathcal{E}\)`
+  - At most one edge connects exactly two vertices
+- In some settings, the third condition is relaxed so that a vertex can have an edge with itself and multiple edges can connect the same two vertices
+
+---
+
+# Examples
+
+- In a social network: 
+  - Vertices are individuals / users
+  - Edges indicate whether two individuals are *friends* on the social network
+- In a food delivery app
+  - Edges may be restaurants and suburbs
+  - Vertices indicate whether a restaurant delivers to a suburb.
+  
+
+---
+
+# Simple example
+
+- Four vertices: A, B, C and D
+  - Edges from A to B, C and D 
+  - Edges from B to A and D 
+  - Edges from C to A and D 
+  - Edges from D to A, C and D
+- This is adapted from the bridges of Königsberg (the first application of graph theory).  
+  
+  
+---
+
+# In Python
+
+- We will use the `networkx` package to deal with graphs and networks.
+- We can build a network from a pandas data frame
+
+
+```python
+import networkx as nx
+df = pd.DataFrame({ 'from':['A', 'A', 'A','B','C'], 'to':['B', 'C', 'D','D','D']})
+df
+```
+
+```
+##   from to
+## 0    A  B
+## 1    A  C
+## 2    A  D
+## 3    B  D
+## 4    C  D
+```
+
+---
+
+# Drawing graph
+
+
+```python
+
+G=nx.from_pandas_edgelist(df, 'from', 'to')
+nx.draw(G, with_labels=True)
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-4-1.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# To look nicer
+
+
+```python
+
+G=nx.from_pandas_edgelist(df, 'from', 'to')
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6)
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-5-3.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Why are they different?
+
+- Layout of graphs is determined by algorithms.
+- The default algorithm is known as Fruchterman-Reingold.
+- To understand must consider two "forces":
+  - Think of edges as "springs" with an attractive force to display shorter edges.
+  - Think of non-adjacent nodes as repelled by electric forces.
+
+
+---
+
+# Fruchterman-Reingold
+
+- Initialise nodes in random positions
+- Compute both attracting and repelling forces for each node.
+- Move all nodes by an amount proportional to net forces.
+- Repeat this, each time making the adjustment smaller.
+
+
+---
+
+# Fruchterman-Reingold
+
+- Due to initial random step, can plot the same plot and get different results.
+- To obtain a consistent layout we can
+  - Fix the position of some nodes
+  - Set the same random seed whenever we draw the graph.
+- Usually experimenting with a few different random seeds is satisfactory.
+
+
+---
+
+# Set seed
+
+
+```python
+
+G=nx.from_pandas_edgelist(df, 'from', 'to')
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos=nx.fruchterman_reingold_layout(G,seed=10))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-6-5.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Same layout
+
+
+```python
+
+G=nx.from_pandas_edgelist(df, 'from', 'to')
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos=nx.fruchterman_reingold_layout(G,seed=10))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-7-7.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Adjacency matrix
+
+- The adjacency matrix is defined so that
+  - The element `\(a_{ij}=1\)` if two vertices are connected by an edge (they are *adjacent*)
+  - The element `\(a_{ij}=0\)` otherwise
+- Let's see an example
+---
+
+# Graph again
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-8-9.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Adjacency matrix
+
+Adjacency matrix given by
+
+`$$\pmb{A} = \begin{pmatrix}0&amp;1&amp;1&amp;1\\1&amp;0&amp;0&amp;1\\1&amp;0&amp;0&amp;1\\1&amp;1&amp;1&amp;0\\\end{pmatrix}$$`
+
+---
+
+# As heatmap
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-9-11.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete graphs
+
+- If there are edges between every pair of nodes the graph is *complete* (then `\(\pmb{A}\)` only has ones off diagonal).
+- If a subset of vertices has this property this is a called a *clique*. 
+- The number of edges divided by the number of edges of a complete graph is a measure of graph *density*.
+
+---
+
+# Complete graph
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-10-13.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Clique
+
+A,B,C and D form a clique
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-11-15.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+What is the density of this graph?
+
+---
+
+
+# Larger networks
+
+- The Fruchterman Reingold method works well for graphs with hundreds of nodes.
+- For larger graphs different algorithms have been developed.
+- This exploits the fact that larger graphs have low density.
+- Break up networks into smaller smaller subgraphs/cliques.
+- Larger graphs benefit from interactivity which is possible (but challenging) using [plotly](https://plotly.com/python/network-graphs/).
+
+---
+
+# Arc plot
+
+An alternative is the [arc plot](https://d3-graph-gallery.com/arc.html).
+
+![](img/arcplot.png)
+
+---
+
+class: inverse, center, middle
+
+# Paths and edges
+
+---
+
+# Paths
+
+- If connect one vertex to another without visting the same vertex twice, this is known as a *path*.
+- Finding the *shortest path* has many applications.
+- This gives a measure of *distance* between nodes
+- We can visualise paths as well
+
+
+
+---
+
+# Paths
+
+Path from A to E
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-12-17.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+#Paths
+
+Path from A to E
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-13-19.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Paths
+
+Another path from A to E
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-14-21.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+#Paths
+
+Not a path
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-15-23.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Hamiltonian Path
+
+- Hamiltonian paths pass through every vertex exactly once.
+- Finding the shortest Hamiltonian path has many applications in logisitics.
+- This is similar to the Travelling Salesman problem.
+- In the TSP however, you must return to the first node
+
+---
+
+#Paths
+
+Hamiltonian Path
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-16-25.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+#Paths
+
+Another Hamiltonian Path
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-17-27.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Connected graphs
+
+- If there is a path between all pairs of vertices then a graph is said to be *connected*.
+- Otherwise it is *disconnected*
+- If a graph is disconnected we usually study its constiuent parts in isolation.
+
+---
+
+# Disconnected graph
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-18-29.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# A real example
+
+.pull-left[
+- The Australian National Electricy Market (NEM) was formed by connecting 5 state markets
+- The are a limited number of interconnections between states.
+]
+.pull-right[
+![](img/NEM.png)
+
+]
+
+
+---
+
+# As a graph
+
+
+```python
+nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS']})
+G=nx.from_pandas_edgelist(nem, 'from', 'to')
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-19-31.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Weighted Graph
+
+- We may assign a number to each edge known as a *weight*.
+- This is called a *weighted graph*
+- In a network the weight often measures some distance between locations.
+- Mathematically the ones in the adjacency matrix become any positive number instead.
+- Therefore weights can represent capacities or flows along a network instead.
+---
+
+# Visualising weighted graphs
+
+- When drawing graphs the edge weight can be shown using the thickness of the line representing each edge.
+- In this way, we can also represent any data about our edges.
+- In the following, we will consider the NEM example and represent the capacity of each interconnector.
+- Note that we potentially lose the interpretation of distance when we assign arbitrary data to the weights.
+---
+
+# Weighted NEM graph
+
+
+
+```python
+nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS'], 
+'capacity':[1380,1770,495, 500]})
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-20-33.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Weighted NEM graph
+
+
+
+```python
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, edge_color = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-21-35.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Directed graph
+
+- Another generalisation of graphs allows for edges to have a direction.
+- An edge from A to B is different from an edge from B to A
+- This is usually visualised using an arrow on the edge 
+
+---
+
+# NEM data
+
+- Consider an application for the NEM data.
+- Instead of capacity of the interconnectors consider the flow of electricity across different regions
+- These data are based on a single snapshot on time and sourced from the NEM.
+---
+
+# Construct graph
+
+
+```python
+nem = pd.DataFrame({ 
+  'from':['QLD', 'NSW', 'SA','VIC'], 
+  'to':['NSW', 'VIC', 'VIC','TAS'],
+  'flow':[332, 644, 339, 308]})
+Gd=nx.from_pandas_edgelist(
+  nem,
+  'from', 
+  'to', 
+  create_using=nx.DiGraph()
+  )
+```
+
+---
+
+# Directed graph
+
+
+```python
+nx.draw(Gd, arrows=True, with_labels=True, node_size=2000, font_size=20, width = nem['flow']/100, pos= nx.nx.fruchterman_reingold_layout(Gd, seed=20))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-23-37.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Other examples
+
+- Directed graphs can be used in social networks where one user *follows* another.
+- Road systems with one way roads.
+- Directed graphs also used to describe causal relationships
+
+---
+
+# Purchase decision
+
+- Consider the following variables 
+  - Age of customer
+  - Advertising exposure
+  - Price
+  - Buy a product
+  
+---
+
+# Purchase decision
+
+- Suppose age does not directly influence the decision to purchase.
+- However, age may influence the exposure to the advertising.
+  - Advertising may be on legacy media more likely to be seen by older individuals.
+- Price directly influence decision to buy.
+---
+
+# As a graph
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-24-39.png" width="70%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Directed Graphs and models
+
+- Directed graphs can be used to build statistical models.
+- These are known as *Bayesian belief nets*
+- One condition is that the graphs cannot contain cycles.
+- The statistical model estimates conditional probabilities of some nodes conditional on other nodes.
+- For example we may be able to estimate the probability that a 25 year old customer purchases a product, given the price is reduced. 
+---
+
+class: middle, center, inverse
+
+# All about vertices
+
+---
+
+# Characterising vertices
+
+- The *degree* of a vertex is the number of nodes it shares an edge with.
+- The *eccentricity* of a vertex is the greatest distance to any other node.
+- The *diameter* is the largest *eccentricity* over the whole graph
+
+
+---
+
+# Example
+
+![](img/Krackhardt.png)
+
+---
+
+# Questions
+
+- This is known as Krackhardt's kite. Answer the following
+  - What is the degree of Andre?
+  - What is the degree of Ike? 
+  - What is the eccentricity of Fernando?
+  - What is the diameter of the graph?
+
+---
+
+# Graph centrality
+
+- Graph centrality is aimed at determining the most 'important' vertex in the graph.
+- In a social network this can be used to identify 'influencers'.
+- There are multiple ways to understand centrality and Krackhardt's kite demonstrates the strengths and weaknesses of each method.
+
+---
+
+# Degree Centrality
+
+.pull-left[
+![](img/Krackhardt.png)
+]
+
+.pull-right[
+- One measure is to find the vertex with the highest degree.
+- This is Diane with a degree of 6.
+]
+
+---
+
+# Closeness Centrality
+
+Closeness centrality is the inverse of all shortest paths
+
+`$$c_j = \frac{n-1}{\sum_{i\neq j} d_{i,j}}$$`
+where `\(d_{i,j}\)` is the length of the shortest path from vertex `\(i\)` to vertex `\(j\)` and `\(n\)` is the number of vertices.
+
+---
+
+# Closeness Centrality of Ike
+
+- Ike is a distance of
+  - 1 from Ike
+  - 2 from Heather
+  - 3 from Fernando and Garth
+  - 4 from everyone else
+- Closeness centrality is `\(10/(1+2+2\times 3+5\times4)\approx 0.349\)`
+
+---
+
+# Closeness centrality
+
+
+.pull-left[
+![](img/Krackhardt.png)
+]
+
+.pull-right[
+- Fernando and Garth have the highest closeness centrality
+- They are in the best position to monitor information flow on the network.
+]
+
+---
+
+# Betweeness centrality
+
+- Betweeness centrality gives a measure of how critical a node is in connecting different parts of the graph.
+- For a vertex `\(j\)`
+  - Take a pair of nodes `\(i,l\neq j\)`
+  - Compute all *shortest paths* between these nodes
+  - Find the proportion of these shortest paths that include node `\(j\)`
+  - Add up over all possible pairs `\(i,l\)`
+
+---
+
+# An example
+
+- Compute betweeness centrality for Fernando.
+  - Shortest paths between Andre and Ed. None of these include Fernando (add 0/2)
+  - Shortest paths between Carol and Heather. Only one that goes through Fernando (add 1/1)
+  - Shortest paths from Diane to Ike. There are two and one goes through Fernando (add 1/2)
+- You would need to do these for all pairs and add, i.e. `\((0/2)+(1/1)+(1/2)\)`
+
+---
+
+# Betweeness centrality
+
+
+.pull-left[
+![](img/Krackhardt.png)
+]
+
+.pull-right[
+- Heather has the highest betweeness centrality
+- She is in a position to control information along the network.
+]
+
+
+---
+
+# Eigenvalue Centrality
+
+- We will conclude with the notion of *Eigenvalue Centrality*. The following must hold for all `\(j\)`. 
+
+`$$c_j=\frac{1}{\lambda}\sum_{i\neq j} a_{ij} c_i$$`
+
+I am important if my friends are important and my friends are important if I am important 
+
+
+---
+
+# Solution
+
+Must find some value `\(\pmb{c}\)` such that
+
+`$$\pmb{A}\pmb{c}=\lambda\pmb{c}$$`
+This is a famous problem in math known as the eigenvalue problem.
+
+There will in general be multiple solutions. However only one solution satisfies the condition that `\(\lamba\)` and all centrality measures are positive.
+
+---
+
+# Eigenvalue centrality
+
+- Perhaps the most famous application of this is the PageRank algorithm.
+- This was the original algorithm used on google search.
+- The idea was to use hyperlinks between websites to construct a network.
+- PageRank was used to order the importance of websites.
+- If you had learnt about this 25 years ago you could be billionaires (sorry!)
+
+---
+
+class: middle, center, inverse
+
+# Bipartite Graph
+
+---
+
+# Bipartite Graph
+
+- A *bipartite graph* is a special graph where the vertices can be separated into two sets `\(\mathcal{V}_1\)` and `\(\mathcal{V}_2\)`.
+  - An example may be that one set is products and the other customers.
+- All edges join one vertex from `\(\mathcal{V}_1\)` to one vertex in `\(\mathcal{V}_2\)`.
+
+
+---
+
+# Example 
+
+- Consider three local restaurants
+  - *Atom* Thai
+  - *Beirut* Felafel
+  - *Cafe* Abercrombie
+- Three customers
+  - Anastasios
+  - Bec
+  - Chao
+
+
+
+```python
+df = pd.DataFrame({  'customer':['Bec', 'Chao', 'Anastasios', 'Bec','Anastasios','Bec','Chao'], 'restaurant':['Atom', 'Atom', 'Beirut','Beirut','Cafe','Cafe','Cafe']})
+G=nx.from_pandas_edgelist(df, 'customer', 'restaurant')
+```
+
+---
+
+# Bipartite graph
+
+
+```python
+
+
+nx.draw(G, with_labels=True, node_size=3000, font_size=15, width = 6, pos=nx.bipartite_layout(G, nodes=['Anastasios','Bec','Chao']))
+plt.show()
+```
+
+&lt;img src="09Networks_files/figure-html/unnamed-chunk-26-41.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Multipartite graphs
+
+- The idea can be extended to multipartite graphs
+- These are used in feedforward deep neural networks
+
+![](img/ffnn.jpeg)
+---
+
+# Sankey diagram
+
+- Multipartite graphs can have weighted edges.
+- Where these represent flows, a useful visualisation is the Sankey diagram.
+- We will constuct a basic example using `plotly`
+- A more detailed example can be found [here](https://plotly.com/python/sankey-diagram/)
+
+---
+
+# Setup
+
+
+```python
+import plotly.graph_objects as go
+source = [0,0,1,1,1,2,2]
+target = [4,5,3,4,5,3,5]
+value = [10,25,15,12,18,12,20]
+link = dict(source = source, target = target, value = value)
+data = go.Sankey(link = link)
+fig = go.Figure(data)
+fig.write_html('sankey.html')
+```
+
+
+---
+
+#Sankey diagram
+
+&lt;iframe src="sankey.html" title="Choropleth" width="700" height="500"&gt;&lt;/iframe&gt;
+
+---
+
+# Chord diagram
+
+- A similar idea to a Sankey diagram but for a complete graph is a chord chart.
+- The nodes are arranged in a circle.
+- Different colours often used for each node.
+- Works for directed and undirected graphs.
+- Example on next slide uses a migration dataset.
+
+---
+
+# Chord diagram
+
+&lt;img src="img/chord.png" width="550"  /&gt;
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- In graph theory
+  - We can characterise paths between vertices
+  - Add more information to edges by using weighted and directed graphs.
+  - Find most critical vertices
+  - Undertand different types of graphs
+- Throughout we saw examples of visualisation.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

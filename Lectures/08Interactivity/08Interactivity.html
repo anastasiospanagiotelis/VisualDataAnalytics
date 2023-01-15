@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 8:InteractiveVisualisation</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 8:</br>Interactive</br>Visualisation
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Interactive plots
+  - Limited interface
+- Dashboards
+  - More interaction with user
+  - Principles
+- Animations
+
+
+
+---
+
+
+
+# Motivation
+
+- Interactive data visualization enables users to directly manipulate and explore graphical representations of data. 
+- Interactive visualisations have an aspect of human input 
+  - Clicking on a button
+  - Moving a slider
+  - Hovering over a mouse
+- Quick response time quick to show updated visual output.
+
+
+
+---
+
+# Packages and data
+
+- We will first use the plotly package
+- From this we can load the gapminder data on different mortality rates and economic growth for many countries across time.
+
+
+```python
+import plotly.express as px
+import plotly.data as pld
+gm = pld.gapminder()
+gm
+```
+
+```
+##           country continent  year  ...   gdpPercap  iso_alpha  iso_num
+## 0     Afghanistan      Asia  1952  ...  779.445314        AFG        4
+## 1     Afghanistan      Asia  1957  ...  820.853030        AFG        4
+## 2     Afghanistan      Asia  1962  ...  853.100710        AFG        4
+## 3     Afghanistan      Asia  1967  ...  836.197138        AFG        4
+## 4     Afghanistan      Asia  1972  ...  739.981106        AFG        4
+## ...           ...       ...   ...  ...         ...        ...      ...
+## 1699     Zimbabwe    Africa  1987  ...  706.157306        ZWE      716
+## 1700     Zimbabwe    Africa  1992  ...  693.420786        ZWE      716
+## 1701     Zimbabwe    Africa  1997  ...  792.449960        ZWE      716
+## 1702     Zimbabwe    Africa  2002  ...  672.038623        ZWE      716
+## 1703     Zimbabwe    Africa  2007  ...  469.709298        ZWE      716
+## 
+## [1704 rows x 8 columns]
+```
+
+
+---
+
+# Scatterplot Code
+
+First a scatterplot using data from 2002
+
+
+```python
+import plotly.express as px
+import plotly.data as pld
+gm2000 = gm[gm['year']==2002]
+fig = px.scatter(
+  gm2000, 
+  y='lifeExp', 
+  x='gdpPercap')
+fig.write_html('scatter.html')
+```
+
+---
+
+# Scatterplot
+
+&lt;iframe src="scatter.html" title="Scatter" width="700" height="500"&gt;&lt;/iframe&gt;
+
+---
+
+# What can I do?
+
+- Zoom in to parts of the plot that have a high density of points.
+- Hover over each point to see the values of each variable.
+- Suppose I want to identify outliers.
+  - A static plot would require looking at the data again and writing more code
+  - Instead we can control what information is shown when we hover over a point.
+  
+---
+
+# Code
+
+
+```python
+fig = px.scatter(
+  gm2000, 
+  y='lifeExp', 
+  x='gdpPercap', 
+  hover_data = ['country'])
+fig.write_html('scatterhover.html')
+```
+
+---
+
+# Plot
+
+&lt;iframe src="scatterhover.html" title="Scatter" width="700" height="500"&gt;&lt;/iframe&gt;
+
+
+---
+
+
+# Code for bubble plot
+
+
+```python
+fig = px.scatter(
+  gm2000, 
+  y='lifeExp', 
+  x='gdpPercap', 
+  size='pop', 
+  color= 'continent', 
+  hover_data = ['country'], 
+  log_x=True, 
+  log_y = True)
+fig.write_html('scatterbubble.html')
+```
+
+---
+
+
+# Plot
+
+&lt;iframe src="scatterbubble.html" title="Bubble" width="700" height="500"&gt;&lt;/iframe&gt;
+
+
+---
+
+# What can I do?
+
+- Use a log scale.
+- Can select groups according to continent.
+- With a static plot would need to facet.
+- If needed facetting is still available in plotly
+- For more on plotly see the documentation [here](https://plotly.com/python/)
+
+---
+
+# Code for line plot
+
+
+```python
+st = pld.stocks()
+fig = px.line(
+  st, 
+  y='FB', 
+  x='date'
+  )
+fig.write_html('line.html')
+```
+
+---
+
+
+# Plot
+
+&lt;iframe src="line.html" title="Line" width="700" height="500"&gt;&lt;/iframe&gt;
+
+---
+
+# Bokeh
+
+- The other python package useful for interactive visualisation is `bokeh`.
+- I will demonstrate a simple scatterplot.
+- Bokeh is a litle different to other packages we have used so far.
+  - It very customisable.
+  - Code can get complicated regading pandas integration (although the `plot_bokeh` library can help..
+  - Good for dashboards.
+
+---
+
+# Bokeh
+
+
+```python
+from bokeh.plotting import figure, output_file, show
+output_file("bokehscatter.html")
+fig = figure(title = "Bokeh Scatter Graph")
+fig.scatter(gm2000['gdpPercap'],gm2000['lifeExp'])
+```
+
+```{=html}
+&lt;div style="display: table;"&gt;&lt;div style="display: table-row;"&gt;&lt;div style="display: table-cell;"&gt;&lt;b title="bokeh.models.renderers.GlyphRenderer"&gt;GlyphRenderer&lt;/b&gt;(&lt;/div&gt;&lt;div style="display: table-cell;"&gt;id&amp;nbsp;=&amp;nbsp;'1037', &lt;span id="1040" style="cursor: pointer;"&gt;&amp;hellip;)&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;data_source&amp;nbsp;=&amp;nbsp;ColumnDataSource(id='1034', ...),&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;glyph&amp;nbsp;=&amp;nbsp;Scatter(id='1035', ...),&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;hover_glyph&amp;nbsp;=&amp;nbsp;None,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;js_event_callbacks&amp;nbsp;=&amp;nbsp;{},&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;js_property_callbacks&amp;nbsp;=&amp;nbsp;{},&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;level&amp;nbsp;=&amp;nbsp;'glyph',&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;muted&amp;nbsp;=&amp;nbsp;False,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;muted_glyph&amp;nbsp;=&amp;nbsp;None,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;name&amp;nbsp;=&amp;nbsp;None,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;nonselection_glyph&amp;nbsp;=&amp;nbsp;Scatter(id='1036', ...),&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;selection_glyph&amp;nbsp;=&amp;nbsp;None,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;subscribed_events&amp;nbsp;=&amp;nbsp;[],&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;tags&amp;nbsp;=&amp;nbsp;[],&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;view&amp;nbsp;=&amp;nbsp;CDSView(id='1038', ...),&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;visible&amp;nbsp;=&amp;nbsp;True,&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;x_range_name&amp;nbsp;=&amp;nbsp;'default',&lt;/div&gt;&lt;/div&gt;&lt;div class="1039" style="display: none;"&gt;&lt;div style="display: table-cell;"&gt;&lt;/div&gt;&lt;div style="display: table-cell;"&gt;y_range_name&amp;nbsp;=&amp;nbsp;'default')&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;script&gt;
+(function() {
+  var expanded = false;
+  var ellipsis = document.getElementById("1040");
+  ellipsis.addEventListener("click", function() {
+    var rows = document.getElementsByClassName("1039");
+    for (var i = 0; i &lt; rows.length; i++) {
+      var el = rows[i];
+      el.style.display = expanded ? "none" : "table-row";
+    }
+    ellipsis.innerHTML = expanded ? "&amp;hellip;)" : "&amp;lsaquo;&amp;lsaquo;&amp;lsaquo;";
+    expanded = !expanded;
+  });
+})();
+&lt;/script&gt;
+
+```
+
+```python
+show(fig)
+```
+---
+
+
+
+# Bokeh 
+
+&lt;iframe src="bokehscatter.html" title="Bokeh " width="700" height="500"&gt;&lt;/iframe&gt;
+
+
+---
+
+class: middle, center, inverse
+
+# Dashboards
+
+---
+
+# Dashboards
+
+- So far the interactivity we considered was limited.
+- The user has no way of changing the visualisation.
+- For example in the gapminder data we only showed data for the year 2002.
+- What if the user wants to be able to select the year?
+
+---
+
+# Dashboards
+
+- Benefits of Dashboards include 
+  - Fast and effective decision-making
+  - On demand, accurate and relevant information in line with business priorities
+  - Focused identification of problems, inefficiencies or negative trends for immediate action and improved performance
+
+---
+
+# Dashboards
+
+- Generally have three elements
+  - Contains multiple graphs.
+  - It has interactive elements
+  - It is uses streames data
+- If the third condition is not met it is a *static dashboard*.
+- We will focus on the second condition
+
+---
+
+# Dashboards
+
+- Dashboards can get complicated, but code will comprise of two parts.
+  - The *layout* dicatates what the user sees, i.e. how the plots and any interactive elements are arranged.
+  - The *callbacks* contains code for creating plots and processing the data depending on the users input.
+- To keep things simple we will only include one callback, a dashboard with multiple plots requires multiple callbacks.
+---
+
+# Using dashboards
+
+- Put all your code into one script
+- Run the scipt
+- Open a browser
+- Navigate to 127.0.0.1:8050
+  - This is the local server
+- Many options exist for hosting and sharing Dash apps online.
+
+---
+
+# Dash code layout
+
+
+```python
+from dash import Dash, dcc, html, Input, Output
+import plotly.express as px
+
+app = Dash(__name__)
+
+
+app.layout = html.Div([
+    dcc.Graph(id="scatter-plot"),
+    html.P("Select a year:"),
+    dcc.Slider(1952,2007,5,
+        value = 1952,
+        id='year-slider',
+        marks={i: '{}'.format(i) for i in range(1952,2007,5)}
+    ),
+])
+```
+
+---
+
+# Dash code layout
+
+
+```python
+@app.callback(
+    Output("scatter-plot", "figure"), 
+    Input("year-slider", "value"))
+def update_plot(year):
+    gm = px.data.gapminder() # replace with your own data source
+    gmy = gm[gm['year']==year]
+    fig =  px.scatter(gmy,
+      y='lifeExp',
+      x='gdpPercap',
+      size='pop', 
+      color= 'continent', 
+      hover_data = ['country'],
+      log_x=True, 
+      log_y = True,
+      title = 'Health v Wealth across the world in '+str(year)
+      )
+    return fig
+app.run_server(debug=True)
+```
+
+---
+
+
+# More on dashboards
+
+- Many things can be done with dashboards
+  - Dash [examples](https://dash.gallery/Portal/)
+  - Bokeh [examples](https://docs.bokeh.org/en/latest/docs/gallery.html)
+- Underlying both packages is html, css and js code (languages used for internet applications)
+- Bokeh 'hides' this a little more.
+
+---
+
+# Avoid
+
+- Having too many plots on a dashboard
+- Having dashboards that are fun to play with but are not business focused.
+  - Dashboard should lead to actionable decisions.
+- Ignoing principles of visualisation.
+
+---
+
+# Bad Dashboard
+
+![](img/BadDashboard.png)
+
+---
+
+class: middle, center, inverse
+
+# Animation
+
+---
+
+# Animation
+
+- One final trick we will learn is to do animations.
+- For example in the gapminder example we can show the plot as a video rather than have a use select each time.
+- This can be done using `matlotlib.animate`
+- The idea is similar to a flipbook
+
+---
+
+# Flipbook
+
+![](img/gif-flipbook-1.gif)
+
+---
+
+# Making an animation
+
+- We will create a sequence of images
+- These will be like the pages of the flip book.
+- These can be created using a function.
+- Then `matplotlib.animate` can just loop through creating the pages of the flipbook.
+- Can then save as  GIF
+  - My example uses the ImageMagick software to create the GIF, this must be installed for following code to work.
+
+
+---
+
+#Animation
+
+
+```python
+from matplotlib import animation
+fig, ax = plt.subplots(figsize = (15, 8))
+def animate(i):
+    ax.cla()
+    year=1952+i*5
+    gmy = gm[gm['year']==year]
+    g = sns.scatterplot(data = gmy, y = 'lifeExp',    x='gdpPercap',hue='continent', size = 'pop')
+
+ani = animation.FuncAnimation(fig=fig, func = animate, frames=12,repeat=True)
+ani.save('animation.gif',writer='imagemagick', fps=1)
+```
+
+
+---
+
+# Animation
+
+![](animation.gif)
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- The purpose of today was to give you a small taste of what is possible with advanced interactive plots.
+- Much more can be done, but the coding becomes sophisticated.
+- Do not forget that more sophisticated does not mean better.
+  - In a written report interactivity cannot be used!
+- However interactive plots can be impactful in a presentation.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
