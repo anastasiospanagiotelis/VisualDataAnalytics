@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 11:Clustering andthe Dendrogram</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 11:</br>Clustering and</br>the Dendrogram
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Distance
+- Single Linkage
+- Other Hierarchical Clustering
+- Dendrogram
+
+
+
+---
+
+# Motivation
+
+- We can profile an individual according to their attributes.
+  - Are two individuals similar?
+  - Can we group to individuals together?
+  - How can we visualise this?
+- The method is hierarchical clustering and the visualisation is the Dendrogram.
+- The ideas we cover are useful in marketing and other business problems.
+
+
+
+
+
+---
+
+class: middle, center, inverse
+
+# Distance
+
+
+---
+
+
+# Why distance?
+ 
+- Many problems that involve thinking about how *similar* or dissimilar two observations are.  For example:&lt;!--D--&gt;
+--
+
+  + May use the same marketing strategy for *similar* demographic groups.
+  + May lend money to applicants who are *similar* to those who pay debts back.&lt;!--D--&gt;
+--
+
+- Arguably the most important concept in data analysis is *distance*
+
+---
+
+# Simple example
+ 
+- Consider 3 individuals:&lt;!--D--&gt;
+--
+
+  + Mr Orange: 37 years of age earns $75k a year
+  + Mr Red: 31 years of age earns $67k a year
+  + Mr Blue: 30 years of age earns $68k a year&lt;!--D--&gt;
+--
+
+- Which two are the most similar?
+
+---
+
+# On a scatterplot
+ 
+
+&lt;img src="11Clustering_files/figure-html/scatter-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Distance as a number
+ 
+- It is easy to think about three individuals but what if there are thousands of individuals?&lt;!--D--&gt;
+--
+
+  + In this case it will be useful to attach some number to the distance between pairs of individuals&lt;!--D--&gt;
+--
+
+  + We will do it with a simple application of Pythagoras' theorem.
+
+---
+  
+# Finding the Distance
+ 
+
+&lt;img src="11Clustering_files/figure-html/pytha-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythb-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythc-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythd-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythe-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythf-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythg-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+  
+&lt;img src="11Clustering_files/figure-html/pythh-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Finding the Distance
+ 
+  
+&lt;img src="11Clustering_files/figure-html/pythi-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Euclidean distance
+ 
+- In general there are more than two variables.&lt;!--D--&gt;
+--
+
+- Is there a way to apply our intuition in 2 dimensions to higher dimensions?&lt;!--D--&gt;
+--
+
+  + Pythagoras' theorem can be *generalised* to higher dimensions.&lt;!--D--&gt;
+--
+
+  + This results in a concept of distance called *Euclidean distance*.
+
+---
+  
+# Euclidean distance
+ 
+
+We measure `\(p\)` variables for two observations: `\(x_{j}\)` is the measurement of variable `\(j\)` for observation `\({\mathbf x}\)`, `\(y_{j}\)` is the measurement of variable `\(j\)` for observation `\({\mathbf y}\)`.  *Euclidean* distance between `\({\mathbf x}\)` and `\({\mathbf y}\)` is:
+
+`$$D\left({\mathbf x},{\mathbf y}\right)=\sqrt{\sum\limits_{j=1}^p \left(x_{j}-y_{j}\right)^2}$$`
+
+---
+
+# Distance and Standardising data
+ 
+- We must be careful about the units of measurement.&lt;!--D--&gt;
+--
+
+- Euclidean distance will change when variables measured in *different units*.&lt;!--D--&gt;
+--
+
+- For this reason, it is common to calculate distance after the *standardising* data.&lt;!--D--&gt;
+--
+
+- If the variables are all measured in the same units, then this standardisation is unecessary.&lt;!--D--&gt;
+
+---
+
+# Other kinds of distance
+ 
+- We will nearly always use Euclidean Distance in this unit, however there are other ways of understanding distance .
+- This includes distance measures for categorical data and even strings of text!
+- While we will not cover these, the methods of hierarchical clustering we cover will work as long as we have some way of defining distance between individuals.
+
+---
+
+# Why is distance useful?
+
+&lt;img src="img/CollaborativeFiltering.jpeg" width="1333" style="display: block; margin: auto;" /&gt;
+
+Figure by Mohamed Ben Ellefi
+
+---
+
+# Recommender Systems
+
+- Famous recommender systems are used by Amazon, Netflix, Alibaba amongst others.
+- These systems are usually a hybrid of 
+  - Collaborative Filtering
+  - Content-based Filtering
+- The method we discussed is more specifically called memory-based collaborative filtering.
+- Being able to put customers into similar groups is important.
+
+
+---
+
+
+class: middle, center, inverse
+
+# Hierarchical Clustering
+
+---
+
+
+# Age v Income
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Obvious clusters
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Summary
+
+- When there are more than 2 variables just looking at a scatterplot doesn’t work.&lt;!--D--&gt;
+--
+
+- Instead algorithms can be used to find the clusters in a sensible way, even in high dimensions.
+
+
+
+---
+
+# Definition of Clustering
+
+- Oxford Dictionary: A group of similar things or people positioned or occurring closely together&lt;!--D--&gt;
+--
+
+- Collins Dictionary: A number of things growing, fastened, or occurring close together&lt;!--D--&gt;
+--
+
+- Note the importance of closeness or distance.  We need two concepts of distance&lt;!--D--&gt;
+--
+
+  1. Distance between **observations**.
+  2. Distance between **clusters**.
+
+---
+
+# A distance between clusters
+
+- Let `\(\mathcal{A}\)` be a cluster with observations `\(\left\{{\mathbf a}_1, {\mathbf a}_2, \ldots, {\mathbf a}_I \right\}\)` and `\(\mathcal{B}\)` be a cluster with points `\(\left\{{\mathbf b}_1, {\mathbf b}_2, \ldots, {\mathbf b}_J \right\}\)`.
+--
+
+- The calligraphic script `\(\mathcal{A}\)` or `\(\mathcal{B}\)` denotes a cluster with possibly more than one point.  
+--
+
+- The bold scipt `\({\mathbf a}_i\)` or `\({\mathbf b}_j\)` denotes a vector of attributes (e.g. age and income) for each observation.
+--
+
+- Rather than vectors, it is much easier to think of each observation as a point in a scatterplot. 
+
+---
+
+#Single Linkage
+
+One way of defining the distance between clusters `\(\mathcal{A}\)` and `\(\mathcal{B}\)` is
+
+`$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\min}D({\mathbf a}_i,{\mathbf b}_j)$$`
+
+This is called **single linkage** or **nearest neighbour**.
+
+---
+
+# Single Linkage
+
+&lt;img src="11Clustering_files/figure-html/slinkp-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage
+
+
+&lt;img src="11Clustering_files/figure-html/slink-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# A simple example
+
+- Over the next couple of slides we will go through the entire process of agglomerative clustering&lt;!--D--&gt;
+--
+
+  + We will use Euclidean distance to define distance between points&lt;!--D--&gt;
+--
+
+  + We will use single linkage to define the distance between clusters&lt;!--D--&gt;
+--
+
+- There are only five observations and two variables
+
+---
+
+# Agglomerative clustering
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Agglomerative clustering
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Hierarchical Clustering
+
+- 5-cluster solution A and B and C and D and E
+--
+
+- 4-cluster solution \{A,D\} and B and C and E  
+--
+
+- 3-cluster solution \{A,D\} and \{B, C\} and E
+--
+
+- 2-cluster solution \{A,B, C,D\} and E
+--
+
+- 1-cluster solution \{A,B, C,D E\}
+
+---
+
+# Dendrogram
+
+- The Dendrogram is a useful tool for analysing a cluster solution.&lt;!--D--&gt;
+--
+
+  + Observations are on one axis (usually x)&lt;!--D--&gt;
+--
+
+  + The distance between clusters is on other axis (usually y).&lt;!--D--&gt;
+--
+
+  + From the Dendrogram one can see the order in which the clusters are merged.
+
+---
+
+# Dendrogram
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Interpretation of Dendrogram
+
+- Think of the axis with distance (y-axis) as the measuring a 'tolerance level'&lt;!--D--&gt;
+--
+
+- If the distance between two clusters is within the tolerance they are merged into one cluster.&lt;!--D--&gt;
+--
+
+- As tolerance increases more and more clusters are merged leading to less clusters overall.&lt;!--D--&gt;
+
+---
+
+# A real example using Python
+
+- We will use the mpg dataset from Seaborn
+  - Observations are cars
+  - Variables are related to engine size, fuel efficiency, etc.
+- Will make car name the index
+- Will remove non numeric variables (origin and name)
+- We will drop observations with missing values.
+
+---
+
+# Data processing
+
+
+```python
+cars =  sns.load_dataset('mpg')
+cars73 = cars[cars['model_year']==73]
+cars73.index = cars73['name']
+carsnum = cars73.iloc[:,0:6]
+carsnum = carsnum.dropna(how = 'any')
+carsnum
+```
+
+```
+##                                mpg  cylinders  ...  weight  acceleration
+## name                                           ...                      
+## buick century 350             13.0          8  ...    4100          13.0
+## amc matador                   14.0          8  ...    3672          11.5
+## chevrolet malibu              13.0          8  ...    3988          13.0
+## ford gran torino              14.0          8  ...    4042          14.5
+## dodge coronet custom          15.0          8  ...    3777          12.5
+## mercury marquis brougham      12.0          8  ...    4952          11.5
+## chevrolet caprice classic     13.0          8  ...    4464          12.0
+## ford ltd                      13.0          8  ...    4363          13.0
+## plymouth fury gran sedan      14.0          8  ...    4237          14.5
+## chrysler new yorker brougham  13.0          8  ...    4735          11.0
+## buick electra 225 custom      12.0          8  ...    4951          11.0
+## amc ambassador brougham       13.0          8  ...    3821          11.0
+## plymouth valiant              18.0          6  ...    3121          16.5
+## chevrolet nova custom         16.0          6  ...    3278          18.0
+## amc hornet                    18.0          6  ...    2945          16.0
+## ford maverick                 18.0          6  ...    3021          16.5
+## plymouth duster               23.0          6  ...    2904          16.0
+## volkswagen super beetle       26.0          4  ...    1950          21.0
+## chevrolet impala              11.0          8  ...    4997          14.0
+## ford country                  12.0          8  ...    4906          12.5
+## plymouth custom suburb        13.0          8  ...    4654          13.0
+## oldsmobile vista cruiser      12.0          8  ...    4499          12.5
+## amc gremlin                   18.0          6  ...    2789          15.0
+## toyota carina                 20.0          4  ...    2279          19.0
+## chevrolet vega                21.0          4  ...    2401          19.5
+## datsun 610                    22.0          4  ...    2379          16.5
+## maxda rx3                     18.0          3  ...    2124          13.5
+## ford pinto                    19.0          4  ...    2310          18.5
+## mercury capri v6              21.0          6  ...    2472          14.0
+## fiat 124 sport coupe          26.0          4  ...    2265          15.5
+## chevrolet monte carlo s       15.0          8  ...    4082          13.0
+## pontiac grand prix            16.0          8  ...    4278           9.5
+## fiat 128                      29.0          4  ...    1867          19.5
+## opel manta                    24.0          4  ...    2158          15.5
+## audi 100ls                    20.0          4  ...    2582          14.0
+## volvo 144ea                   19.0          4  ...    2868          15.5
+## dodge dart custom             15.0          8  ...    3399          11.0
+## saab 99le                     24.0          4  ...    2660          14.0
+## toyota mark ii                20.0          6  ...    2807          13.5
+## oldsmobile omega              11.0          8  ...    3664          11.0
+## 
+## [40 rows x 6 columns]
+```
+
+---
+# Plot
+
+
+```python
+sns.clustermap(carsnum, standard_scale=1)
+
+```
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-19-1.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# What do we see?
+
+- Notice there are two dendrograms
+  - One groups observations together
+  - The other groups variables together
+- The inside is a heatmap for the data matrix
+- Cars most easily grouped by cylinders.
+- Also groupings in variables.
+
+---
+
+# Dendrogram only
+
+
+```python
+from scipy.cluster.hierarchy import dendrogram, linkage
+import numpy as np
+plt.figure()
+Z = linkage(carsnum, 'average')
+dendrogram(Z, orientation = 'right', leaf_font_size=8, labels=carsnum.index)
+```
+
+```
+## {'icoord': [[5.0, 5.0, 15.0, 15.0], [25.0, 25.0, 35.0, 35.0], [55.0, 55.0, 65.0, 65.0], [45.0, 45.0, 60.0, 60.0], [85.0, 85.0, 95.0, 95.0], [75.0, 75.0, 90.0, 90.0], [52.5, 52.5, 82.5, 82.5], [30.0, 30.0, 67.5, 67.5], [10.0, 10.0, 48.75, 48.75], [115.0, 115.0, 125.0, 125.0], [105.0, 105.0, 120.0, 120.0], [135.0, 135.0, 145.0, 145.0], [165.0, 165.0, 175.0, 175.0], [155.0, 155.0, 170.0, 170.0], [195.0, 195.0, 205.0, 205.0], [185.0, 185.0, 200.0, 200.0], [162.5, 162.5, 192.5, 192.5], [140.0, 140.0, 177.5, 177.5], [112.5, 112.5, 158.75, 158.75], [29.375, 29.375, 135.625, 135.625], [235.0, 235.0, 245.0, 245.0], [225.0, 225.0, 240.0, 240.0], [215.0, 215.0, 232.5, 232.5], [255.0, 255.0, 265.0, 265.0], [223.75, 223.75, 260.0, 260.0], [275.0, 275.0, 285.0, 285.0], [295.0, 295.0, 305.0, 305.0], [280.0, 280.0, 300.0, 300.0], [315.0, 315.0, 325.0, 325.0], [335.0, 335.0, 345.0, 345.0], [320.0, 320.0, 340.0, 340.0], [355.0, 355.0, 365.0, 365.0], [385.0, 385.0, 395.0, 395.0], [375.0, 375.0, 390.0, 390.0], [360.0, 360.0, 382.5, 382.5], [330.0, 330.0, 371.25, 371.25], [290.0, 290.0, 350.625, 350.625], [241.875, 241.875, 320.3125, 320.3125], [82.5, 82.5, 281.09375, 281.09375]], 'dcoord': [[0.0, 88.03550420143, 88.03550420143, 0.0], [0.0, 59.481089431852205, 59.481089431852205, 0.0], [0.0, 15.787653403846944, 15.787653403846944, 0.0], [0.0, 45.880216444950214, 45.880216444950214, 15.787653403846944], [0.0, 44.74371464239419, 44.74371464239419, 0.0], [0.0, 92.92104792281953, 92.92104792281953, 44.74371464239419], [45.880216444950214, 137.6616011795999, 137.6616011795999, 92.92104792281953], [59.481089431852205, 213.9416452234791, 213.9416452234791, 137.6616011795999], [88.03550420143, 394.37109086075696, 394.37109086075696, 213.9416452234791], [0.0, 147.7125587077822, 147.7125587077822, 0.0], [0.0, 227.8631429671649, 227.8631429671649, 147.7125587077822], [0.0, 80.68457101577724, 80.68457101577724, 0.0], [0.0, 53.73081052803875, 53.73081052803875, 0.0], [0.0, 103.67267510400372, 103.67267510400372, 53.73081052803875], [0.0, 71.09852319141376, 71.09852319141376, 0.0], [0.0, 108.9847129836455, 108.9847129836455, 71.09852319141376], [103.67267510400372, 159.73982964589698, 159.73982964589698, 108.9847129836455], [80.68457101577724, 283.94470086840636, 283.94470086840636, 159.73982964589698], [227.8631429671649, 455.68741053034796, 455.68741053034796, 283.94470086840636], [394.37109086075696, 731.2255841366056, 731.2255841366056, 455.68741053034796], [0.0, 37.5, 37.5, 0.0], [0.0, 77.17101949381389, 77.17101949381389, 37.5], [0.0, 89.45082340114844, 89.45082340114844, 77.17101949381389], [0.0, 122.43365550370535, 122.43365550370535, 0.0], [89.45082340114844, 264.3222136721872, 264.3222136721872, 122.43365550370535], [0.0, 55.58102194094671, 55.58102194094671, 0.0], [0.0, 65.81223290544092, 65.81223290544092, 0.0], [55.58102194094671, 136.44251326052807, 136.44251326052807, 65.81223290544092], [0.0, 35.04283093587046, 35.04283093587046, 0.0], [0.0, 72.71347880551446, 72.71347880551446, 0.0], [35.04283093587046, 89.33483360495939, 89.33483360495939, 72.71347880551446], [0.0, 68.01654210557899, 68.01654210557899, 0.0], [0.0, 121.783619588186, 121.783619588186, 0.0], [0.0, 126.15128609596283, 126.15128609596283, 121.783619588186], [68.01654210557899, 198.65995652394722, 198.65995652394722, 126.15128609596283], [89.33483360495939, 322.07743458134325, 322.07743458134325, 198.65995652394722], [136.44251326052807, 497.4533751449865, 497.4533751449865, 322.07743458134325], [264.3222136721872, 795.4271325103182, 795.4271325103182, 497.4533751449865], [731.2255841366056, 1742.0563117804074, 1742.0563117804074, 795.4271325103182]], 'ivl': ['volkswagen super beetle', 'fiat 128', 'maxda rx3', 'opel manta', 'ford pinto', 'toyota carina', 'fiat 124 sport coupe', 'mercury capri v6', 'chevrolet vega', 'datsun 610', 'plymouth valiant', 'chevrolet nova custom', 'dodge dart custom', 'audi 100ls', 'saab 99le', 'ford maverick', 'amc hornet', 'plymouth duster', 'amc gremlin', 'volvo 144ea', 'toyota mark ii', 'chevrolet impala', 'ford country', 'mercury marquis brougham', 'buick electra 225 custom', 'chrysler new yorker brougham', 'plymouth custom suburb', 'amc matador', 'oldsmobile omega', 'dodge coronet custom', 'amc ambassador brougham', 'buick century 350', 'chevrolet monte carlo s', 'chevrolet malibu', 'ford gran torino', 'chevrolet caprice classic', 'oldsmobile vista cruiser', 'plymouth fury gran sedan', 'ford ltd', 'pontiac grand prix'], 'leaves': [17, 32, 26, 33, 27, 23, 29, 28, 24, 25, 12, 13, 36, 34, 37, 15, 14, 16, 22, 35, 38, 18, 19, 5, 10, 9, 20, 1, 39, 4, 11, 0, 30, 2, 3, 6, 21, 8, 7, 31], 'color_list': ['C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C1', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C2', 'C0']}
+```
+
+---
+
+# Dendrogram
+
+
+```python
+plt.show()
+```
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-21-3.png" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# More about the code
+
+- The hierarchical is done using the scipy package.
+- Information can also be pulled out of the object created by this package.
+- By default this package does not do simple linkage.
+- We will now see why.
+
+
+---
+
+class: middle, center, inverse
+
+# Other clustering methods
+
+
+
+---
+
+# Pros and Cons of Single Linkage
+
+- Pros:
+  + Single linkage is very easy to understand.
+  + Single linkage is a very fast algorithm.&lt;!--D--&gt;
+--
+
+- Cons:
+  + Single linkage is very sensitive to single observations which leads to chaining.
+  + Complete linkage avoids this problem and gives more compact clusters with a similar diameter.
+
+
+
+---
+
+# Chaining
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-22-5.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage Dendrogram
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Single Linkage
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Add one observation
+
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# New solution
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Dendrogram with Chaining
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-27-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Robustness
+
+- In general adding a single observation should not dramatically change the analysis.
+--
+
+- In this instance the new observation was not even an *outlier*.
+--
+
+- A term used for such an observation is an *inlier*.
+--
+
+- Methods that are not affected by single observations are often called **robust**.
+--
+
+- Let's see if complete linkage is *robust* to the inlier.
+
+---
+
+# Complete Linkage
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete Linkage: Dendrogram
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Disadvantages of CL
+
+- Complete Linkage overcomes *chaining* and is robust to inliers
+--
+
+- However, since the distance between clusters only depends on two observations it can still be sensitive to outliers.&lt;!--D--&gt;
+--
+
+- The following methods are more robust and should be preferred&lt;!--D--&gt;
+--
+
+  + Average Linkage
+  + Centroid Method
+  + Ward’s Method
+
+---
+
+# Average Linkage
+
+The distance between two clusters can be defined so that it is based on all the pairwise distances between the elements of each cluster.
+`$$D(\mathcal{A},\mathcal{B})=\frac{1}{|\mathcal{A}||\mathcal{B}|}\sum\limits_{i=1}^{|\mathcal{A}|}\sum\limits_{j=1}^{|\mathcal{B}|}D({\mathbf a}_i,{\mathbf b}_j)$$`
+Here `\(|\mathcal{A}|\)` is the number of observations in cluster `\(\mathcal{A}\)` and `\(|\mathcal{B}|\)` is the number of observations in cluster `\(\mathcal{B}\)`
+
+---
+
+#Average Linkage
+
+- Average linkage can be called different things&lt;!--D--&gt;
+--
+
+  + Between groups method.
+  + Unweighted Pair Group Method with Arithmetic mean (UPGMA)
+
+---
+
+# Pairwise distances (one obs.)
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# All pairwise distances
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Centroid Method
+
+- The centroid of a cluster can be defined as the mean of all the
+points in the cluster.&lt;!--D--&gt;
+--
+
+- If `\(\mathcal{A}\)` is a cluster containing the observations `\({\mathbf a}\)` then the **centroid** of `\(\mathcal{A}\)` is given by.&lt;!--D--&gt;
+--
+
+`$${\mathbf{\bar{a}}}=\frac{1}{|\mathcal{A}|}\sum_{\mathbf{a}_i\in\mathcal{A}}\mathbf{a}_i$$`&lt;!--D--&gt;
+--
+
+- The distance between two clusters can then be defined as the distance between the respective centroids.
+
+---
+
+# Vector mean
+
+- Recall that `\(\mathbf{a}_i\)` is a vector of attributes, e.g income and age.
+--
+
+- In this case `\(\bar{\mathbf{a}}\)` is also a vector of attributes.
+--
+
+- Each element of `\(\bar{\mathbf{a}}\)` is the mean of a different attribute, e.g. mean income, mean age.
+
+---
+
+# Centroid method
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Centroid method
+
+&lt;img src="11Clustering_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Average Linkage v Centroid
+
+- Consider an example with one variable (although everything works with vectors too).&lt;!--D--&gt;
+--
+
+- Suppose we have the clusters `\(\mathcal{A}=\left\{0,2\right\}\)` and `\(\mathcal{B}=\left\{3,5\right\}\)`&lt;!--D--&gt;
+--
+
+- Find the distance `\(\mathcal{A}\)` and `\(\mathcal{B}\)` using&lt;!--D--&gt;
+--
+
+  + Average Linkage
+  + Centroid Method
+
+---
+
+# Average Linkage
+
+- Must find distances between all pairs of observations&lt;!--D--&gt;
+--
+
+  + `\(D(a_1,b_1)=3\)`
+  + `\(D(a_1,b_2)=5\)`
+  + `\(D(a_2,b_1)=1\)`
+  + `\(D(a_2,b_2)=3\)`&lt;!--D--&gt;
+--
+
+- Averaging these, the distance is 3.
+
+---
+
+# Centroid method
+
+- First find centroids&lt;!--D--&gt;
+--
+
+  + `\(\bar{a}=1\)`
+  + `\(\bar{b}=4\)`&lt;!--D--&gt;
+--
+
+- The distance is 3.&lt;!--D--&gt;
+--
+
+- Here both methods give the same answer but when vectors are used instead they do not give the same answer in general.
+
+
+---
+
+# Average Linkage v Centroid
+
+- In average linkage&lt;!--D--&gt;
+--
+
+  1. Compute the distances between pairs of observations
+  2. Average these distances&lt;!--D--&gt;
+--
+
+- In the centroid method&lt;!--D--&gt;
+--
+
+  1. Average the observations to obtain the centroid of each cluster.
+  2. Find the distance between centroids
+
+---
+
+# Ward's method
+
+- All methods so far, merge two clusters when the distance between them is small.&lt;!--D--&gt;
+--
+
+- Ward’s method merges two clusters to minimise within cluster variance.&lt;!--D--&gt;
+--
+
+- Two variations implemented in R.&lt;!--D--&gt;
+--
+
+  + `Ward.D2` is the same as the original Ward paper.
+  + `Ward.D` is actually based on a mistake but can still work quite well.
+
+
+---
+
+# Within Cluster Variance
+
+- The within-cluster variance for a cluster `\(\mathcal{A}\)` is defined as
+
+`$$\mbox{V}_{\mbox{w}}(\mathcal{A})=\frac{1}{|\mathcal{A}|-1}S(\mathcal{A})$$`
+
+where 
+`$$S(\mathcal{A})=\sum_{\mathbf{a}_i\in\mathcal{A}}\left[\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)\right]$$`
+
+---
+
+# Vector notation
+
+- The term `\(S(\mathcal{A})=\sum\limits_{\mathbf{a}_i\in\mathcal{A}}\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)'\left(\mathbf{a}_i-{\mathbf{\bar{a}}}\right)\)` uses vector notation, but the idea is simple.
+--
+
+- Take the difference of each attribute from its mean (e.g. income, age, etc.)
+--
+
+- Then square them and add together over attributes **and** observations.
+--
+
+- The within cluster variance is a total variance across all attributes.
+
+---
+
+# Ward's algorithm
+
+- At each step we must merge two clusters to form a single cluster.
+--
+
+- Suppose we pick a cluster `\(\mathcal{A}\)` and `\(\mathcal{B}\)` to form a new cluster `\(\mathcal{C}\)`.
+--
+
+- Ward's algorithm chooses `\(\mathcal{A}\)` and `\(\mathcal{B}\)` so that `\(V_{W}(\mathcal{C})\)` is as small as possible.
+
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- We have covered hierarchical clustering
+- In BUSS6002 you will also cover *k-means clustering*.
+- An advantage of hierarchical clustering is visualisation via the dendrogram.
+- However the ideas of understanding when obseravations are similar is useful in many other areas of business analytics.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

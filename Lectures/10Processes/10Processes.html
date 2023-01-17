@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Week 10:VisualisingProcesses</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Visual Data Analytics" />
+    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
+    <link rel="stylesheet" href="../css/mod.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Week 10:</br>Visualising</br>Processes
+]
+.author[
+### Visual Data Analytics
+]
+.institute[
+### University of Sydney
+]
+
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      bA: "{\\mathbf{A}}",
+      bC: "{\\mathbf{C}}",
+      bv: "{\\mathbf{v}}",
+      bw: "{\\mathbf{w}}",
+      bx: "{\\mathbf{x}}",
+      bX: "{\\mathbf{X}}",
+      by: "{\\mathbf{y}}",
+      bY: "{\\mathbf{Y}}",
+      bw: "{\\mathbf{w}}",
+      bW: "{\\mathbf{W}}",
+      bK: "{\\mathbf{K}}",
+      bz: "{\\mathbf{z}}",
+      bU: "{\\mathbf{U}}",
+      bS: "{\\mathbf{S}}",
+      bff: "{\\mathbf{f}}",
+      bD: "{\\mathbf{D}}",
+      bL: "{\\mathbf{L}}",
+      calL: "{\\mathcal{L}}",
+      calM: "{\\mathcal{M}}",
+      bbR: "{\\mathbb{R}}",
+      bB: "{\\mathbf{B}}",
+      bbb: "{\\mathbf{b}}",
+      bLambda: "{\\boldsymbol{\\Lambda}}",
+      bDelta: "{\\boldsymbol{\\Delta}}",
+      bH: "{\\mathbf{H}}",
+      bI: "{\\mathbf{I}}",
+      biota: "{\\boldsymbol{\\iota}}",
+      bN: "{\\mathbf{N}}",
+      bQ: "{\\mathbf{Q}}"
+      }
+  }
+});
+</script>
+
+# Outline
+
+- Flow Charts
+- PERT Chart
+- Gantt charts
+- Waterfall/ Funnel
+- More Sankey diagrams
+
+
+
+---
+
+# Motivation
+
+- Many business processes are easier to understand if visualised.
+- This is particularly the case for project management.
+- In this topic we will not be visualising observations and variables as we did in other topics
+- However it does have similarities to graph theory and networks.
+
+
+
+
+---
+
+class: middle, center, inverse
+
+# Flow charts
+
+
+---
+
+# Processes
+
+- Critical to all businesses and large organisations.
+- Can be complex and missing steps can be disastrous.
+- Visualising processes with flow charts prevents such mistakes. 
+- A flow chart helps with the organisation of workflow.
+
+---
+
+# Elements of a flow chart
+
+- Start and end
+- Inputs and outputs
+- Processes
+- Outputs
+- Connections
+
+---
+
+# Flow chart symbols
+
+![](img/flowsymbols.png)
+
+
+---
+
+# How to cook pasta
+
+![](img/pastaflow.png)
+
+---
+
+# Uses of flow charts
+
+- We can use a flow chart to summarise our own workflow as data scientists.
+  - Generate questions, tidy data visualise and back to questions again.
+  - Flow charts can be useful to help you organise code.
+- Sometimes the best projects start out with pen and paper!
+
+---
+
+# CPM/ PERT charts
+
+- In many operations the Critical Path Method (CPM) and Program Evaluation and Review Technique (PERT) aid decision.
+- The full implications of these go beyond the scope of the course.
+- We will focus on the visual aspect.
+
+---
+
+# More pasta
+
+![](img/pastaPERT.png)
+
+---
+
+# Critical path
+
+- The purpose of CPM/PERT is to identify the *critical path*.
+- In the pasta example, boiling the water and cooking the pasta take longer than the sauce.
+- Any delays along the critical path leads to delays in the whole project.
+- Note that we are visualising this as if it were a network.
+
+---
+
+# Gantt chart
+
+- The Gantt chart was popularised by Henry Gantt in the early twentieth century.
+- It was used primarily to make industrial processes more efficient. 
+- It is particularly useful for showing how tasks can be done in parallel while waiting for other tasks to be completed.
+
+
+---
+
+# Example
+
+![](img/Gantt.png)
+
+---
+
+# In Python
+
+
+
+```python
+import plotly.figure_factory as ff
+
+df = [dict(Task="Job-1", Start='2021-06-01', Finish='2021-07-02', Resource='Complete'),
+      dict(Task="Job-1", Start='2021-07-15', Finish='2021-08-15', Resource='In progress'),
+      dict(Task="Job-2", Start='2021-06-17', Finish='2021-07-17', Resource='Not Started'),
+      dict(Task="Job-2", Start='2021-06-17', Finish='2021-07-17', Resource='Complete'),
+      dict(Task="Job-3", Start='2021-08-10', Finish='2021-08-15', Resource='Not Started'),
+      dict(Task="Job-3", Start='2021-09-01', Finish='2021-09-20', Resource='Not Started'),
+      dict(Task="Job-3", Start='2021-08-18', Finish='2021-11-18', Resource='Not Started'),
+      dict(Task="Job-4", Start='2021-06-14', Finish='2021-08-14', Resource='Complete')] 
+fig = ff.create_gantt(df, index_col='Resource',show_colorbar=True, group_tasks=True)
+fig.write_html('gantt.html')
+```
+
+---
+
+# Plot
+
+&lt;iframe src="gantt.html" title="Gantt" width="700" height="500"&gt;&lt;/iframe&gt;
+
+
+---
+
+# Waterfall
+
+- The waterfall chart shows time across the horizontal axis and the cumulative effects of payments on the vertical axis.
+- It is useful for showing cash flows and revenue in financial analysis.
+- Different colors may indicate different types of cash flow.
+
+---
+
+
+# Example
+
+![](img/Waterfall.png)
+
+---
+
+# Funnel
+
+- The funnel shows values across multiple stages.
+- Time is shown vertically
+- It is a special case of a Sankey diagram.
+- It is particularly useful in marketing applications
+
+---
+
+
+# Example
+
+![](img/Funnel.png)
+
+---
+
+# Setup in Python
+
+
+```python
+import plotly.express as px
+data = dict(
+    number=[4500, 1500, 750, 500, 250],
+    stage=["Website visits", "Downloads", "Contacted by email", "Requested price", "Purchased"])
+fig = px.funnel(data, x='number', y='stage')
+fig.write_html('funnel.html')
+```
+---
+
+# Funnel plot
+
+&lt;iframe src="funnel.html" title="Funnel" width="700" height="500"&gt;&lt;/iframe&gt;
+
+---
+
+
+
+# Python
+
+- Python code was not shown for every plot in this lecture.
+- While these plots are popular in business
+  - They require dedicated packages in Python or 
+  - They can be customised with the usual visualisation libraries.
+- Often they are easier to create with other software.
+
+---
+
+class: middle, center, inverse
+
+# Wrap-up
+
+---
+
+# Conclusions
+
+- There are many ways to visualise processes.
+  - Often these rely on a graph / network visualisation.
+  - In other cases they are quite unique.
+- While these are often used for big organisations, you can use them as individuals to plan out your own workflows.
+
+---
+
+class: middle, center, inverse
+
+# Questions
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="libs/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"slideNumberFormat": "%current%",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
