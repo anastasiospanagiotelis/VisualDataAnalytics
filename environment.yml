@@ -9,7 +9,6 @@ dependencies:
   - pandas
   - seaborn
   - plotly
-  - datetime
   - geopandas
   - geoplot
   - IPython
