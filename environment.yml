@@ -1,0 +1,15 @@
+name: vda-environment
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - numpy
+  - scipy
+  - matplotlib
+  - pandas
+  - seaborn
+  - plotly
+  - datetime
+  - geopandas
+  - geoplot
+  - IPython

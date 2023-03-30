@@ -12,3 +12,5 @@ Lecture material for QBUS6860. Planned list of topics (subject to change)
 - Networks (inc. graph theory and visualisation)
 - Visualising Processes
 - Hierarchical clustering
+
+Credit for tutorials belongs to Tatiana Vlasova and Sing Ping Lee.
