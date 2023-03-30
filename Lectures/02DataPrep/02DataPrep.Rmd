@@ -178,7 +178,7 @@ NBA
 
 - Empty cells for Steph Curry
   - Not such a big issue (see missing data later)
-- What if Kevin Durant moves to another team?
+- What if Kevin Durant moves to another team? (He did...)
 - What if we want to include Giannis (only played for Bucks)?
   - Would need new columns and code that previously worked may break.
 
@@ -461,8 +461,8 @@ NBAmerge
 
 # Putting them together
 
-- In your own time, construct data frames for the following following:
-  - Each state and with the maximum points per minute (PPM) by a player from each state.
+- In your own time, construct data frames for the following:
+  - Each observation is a state and with the maximum points per minute (PPM) by a player from each state.
   - The same as above with states ranked from highest to lowest according to the maximum PPM.
   - The same as above but with an extra column with the player name of the player with the highest PPM in each state.
 - There may be more than one correct answer.
@@ -678,5 +678,3 @@ class: middle, center, inverse
 class: middle, center, inverse
 
 # Questions
-
----

@@ -18,7 +18,12 @@ output:
 
 # Outline
 
-- Choropleth
+- Plotting maps
+  + Understanding projections
+- Adding data to maps
+  + Choropleth
+- Heatmap
+  + Heatmaps are not choropleths!
 
 ```{r,include=FALSE}
 library(reticulate)
@@ -43,18 +48,11 @@ knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
 
 # Packages
 
-- There is an entire field known as Geographical Information Systems (GIS) that we learn over an entire course.
-- This is a complicated problem that takes is issues with how coordinates are obtained, how they can be projected in different ways, etc.
-- We will be using the `geopandas` package.
-- This has many dependencies and can be fiddly to install
+- There is an entire field known as Geographical Information Systems (GIS) that we could cover over an entire course.
+- It involves complicated problems including how coordinates are obtained, how they can be projected in different ways, etc.
+- The `geopandas` and `geoplot` packages can be used to handle these problems for us.
+- This package has many dependencies and can be fiddly to install
 
----
-
-# Virtual Environment
-
-- Installation instructions can be found in the [geopandas page](https://geopandas.org/en/stable/getting_started/install.html).
-- Since there can be clashes with dependencies, it is probably easiest to create a virtial environment just for working with geospatial data.
-- Go the the instructions on *Creating a new environment*
 
 ---
 
@@ -76,7 +74,7 @@ geoplot.polyplot(world, geoplot.crs.Mercator())
 - The earth is round.
 - There are different ways to project a sphere onto a flat screen.
 - All create distortion
-- The mercator projection (previous slide) makes areas near the poles look bigger.
+- The Mercator projection (previous slide) makes areas near the poles look bigger.
 
 ---
 
@@ -94,7 +92,8 @@ geoplot.polyplot(world, geoplot.crs.Robinson())
 
 - For looking at small countries or cities... no
 - For large countries near the North pole... yes
-- For the North America it is common to use an Albers projection
+- For the North America it is common to use an Albers projection.
+- For Europe it is common to use an Lambert azimuthal projection.
 
 ---
 
@@ -111,7 +110,7 @@ geoplot.polyplot(world, geoplot.crs.Robinson())
 ---
 
 
-# North America
+# Europe
 
 .pull-left[
 ![](img/EuropeMerc.jpeg)
@@ -145,7 +144,7 @@ aus
 
 # Simplify series
 
-These shapefiles are very detailes making plotting slow so we can simplify them.
+These shapefiles are very detailed making plotting slow. So we can simplify them.
 
 ```{python,echo=T}
 aus.geometry = aus.geometry.simplify(0.001)
@@ -183,7 +182,7 @@ geoplot.polyplot(aus, geoplot.crs.Robinson())
 
 class: middle, center, inverse
 
-# Wrap-up
+# Choropleth
 
 ---
 
@@ -246,7 +245,7 @@ class: middle, center, inverse
 
 - Unless you know the location well, it may be hard to tell which regions are which.
 - Also urban areas tend to be smaller therefore it helps to be able to zoom in and move around.
-- We can also augment the choropleth with individual locations.
+- We can also augment the choropleth with data from individual locations.
 
 ---
 
@@ -281,7 +280,7 @@ fig.write_html('plotly_choropleth.html')
 
 - There are a rich range of visualisations that you can create with geographic data.
 - However you can generally only look at one variable at one moment of time.
-- You can construct multiple choropleths and display together but they can also be difficult to interpret.
+- You can construct multiple choropleths and display them together but this can be difficult to interpret.
 
 ---
 
@@ -289,14 +288,14 @@ fig.write_html('plotly_choropleth.html')
 
 - In many countries, the population density is not uniform
 - This includes Australia, the US and China where most of the population lives on the coast and well as India and France as other examples with less densely populated regions.
-- This commonly leads to misinterpratation of election results.
+- This commonly leads to misinterpratation of data.
 
 ---
 
 # Australian 2010 election
 
 .pull-left[
-- The 2010 election was very close
+- The 2010 election was very close.
 - However the map on the right suggests the Coalition (blue) was dominant.
 - This map shows land but not voters.
 ]
@@ -338,7 +337,10 @@ class: middle, center, inverse
 # Heatmaps
 
 - A choropleth is often called a *heatmap*.
-- A heatmap is a similar idea in that areas are shown with different colors. However a heatmap is used to visualise numbers in a matrix.
+- A heatmap is a similar idea with areas shown using different colors. 
+- However a heatmap is used to visualise numbers in a matrix.
+  + A data matrix
+  + A correlation matrix
 
 
 ---
@@ -408,7 +410,7 @@ sns.heatmap(taxiscor, annot = True)
 - This is why it works well for the flights example.
 - For a correlation heatmap, the row and column order is arbitrary.
 - It is better than looking at a correlation matrix.
-- Something like a pairs plot shows more.
+- However, something like a pairs plot shows more information about the relationships between variables.
 
 ---
 class: middle, center, inverse
@@ -422,7 +424,7 @@ class: middle, center, inverse
 - Spatial data can be used to create valuable visualisations. However
   - Think carefully about how population is distributed in geographic regions
   - Do not neglect other visualisation methods
-- Heatmaps are different to choropleths even if these two words a re often confused.
+- Heatmaps are different to choropleths even if these two words are often confused.
   - Be aware of the strengths and weaknesses of heatmaps.
 ---
 

@@ -60,7 +60,7 @@ class: center, middle, inverse
 - There are two options
   - Grouped bar charts
   - Stacked bar charts
-- We will investiate using the taxis and diamonds data also used last week.
+- We will investigate using the taxis and diamonds data also used last week.
 
 
 ```{python}
@@ -95,7 +95,7 @@ sns.countplot(data=diam, x='clarity', hue='cut')
 
 # Stacked bar chart
 
-First must prepare data by creating corss tab
+First must prepare data by creating cross tab
 
 ```{python,echo =T, out.width="50%"}
 diamct = pd.crosstab(diam['clarity'],diam['cut'])

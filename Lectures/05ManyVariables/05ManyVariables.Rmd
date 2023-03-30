@@ -140,8 +140,8 @@ sns.scatterplot(data = taxisdat, y='fare', x = 'distance', hue='pickup_borough')
 - The outliers with small distance, high fare also had higher tips.
   - Perhaps for these trips the taxi driver did something exceptional.
 - The outliers at top right mostly Queens.
-  - This supports the idea than Manhattan has low fares realtive to Queens due to the fact that trips in Manhattan are shorter.
-- Nont definitive causal explanations, but color allows for a richer exploratory understanding of data.
+  - This supports the idea than Manhattan has low fares relative to Queens due to the fact that trips in Manhattan are shorter.
+- Not definitive causal explanations, but color allows for a richer exploratory understanding of data.
 
 ---
 
@@ -228,7 +228,7 @@ knitr::include_graphics('img/mona-lisa-gradient.png',dpi = 100)
 
 # World Bank Data
 
-- Will data sourced from World Bank on European and Central Asian countries in 2015. There are three variables
+- Will use data sourced from World Bank on European and Central Asian countries in 2015. There are three variables
   - GDP growth
   - Net trade
   - Current account balance
@@ -244,12 +244,63 @@ sns.scatterplot(data = wb, hue='Current Account', y = 'Net Trade', x='GDP growth
 
 ---
 
+# Match white with 0
+
+```{python, out.width='50%',echo=T,eval=F}
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+
+fig, ax = plt.subplots()
+wb = pd.read_csv('../data/worldbank.csv', na_values = '..')
+wb.dropna(axis = 0, how = 'any', inplace = True)
+
+vcenter = 0
+vmin, vmax = wb['Net Trade'].min(), wb['Net Trade'].max()
+normalize = mcolors.TwoSlopeNorm(vcenter=vcenter, vmin=vmin, vmax=vmax)
+colormap = cm.RdBu
+plt.scatter(y=wb['Current Account'],x=wb['GDP growth'],c=wb['Net Trade'],norm=normalize,cmap=colormap,ax=ax,edgecolor='black')
+
+scalarmappaple = cm.ScalarMappable(norm=normalize, cmap=colormap)
+scalarmappaple.set_array(wb['Net Trade'])
+fig.colorbar(scalarmappaple)
+plt.show()
+```
+
+
+---
+
+# Match white with 0
+
+```{python, out.width='50%',echo=F,eval=T}
+
+import matplotlib.cm as cm
+import matplotlib.colors as mcolors
+
+fig, ax = plt.subplots()
+wb = pd.read_csv('../data/worldbank.csv', na_values = '..')
+wb.dropna(axis = 0, how = 'any', inplace = True)
+
+vcenter = 0
+vmin, vmax = wb['Net Trade'].min(), wb['Net Trade'].max()
+normalize = mcolors.TwoSlopeNorm(vcenter=vcenter, vmin=vmin, vmax=vmax)
+colormap = cm.RdBu
+sns.scatterplot(y=wb['Current Account'],x=wb['GDP growth'],c=wb['Net Trade'],norm=normalize,cmap=colormap,ax=ax,edgecolor='black')
+
+scalarmappaple = cm.ScalarMappable(norm=normalize, cmap=colormap)
+scalarmappaple.set_array(wb['Net Trade'])
+fig.colorbar(scalarmappaple)
+plt.show()
+```
+
+
+---
+
 # Cyclical
 
 - As the name implies a cyclical colormap 'wraps' back around on itself.
 - It is useful for displaying data about angles (e.g wind direction) or calendar effects
 - The next slide shows taxi fare against distance with day of week mapped to color.
-- We will cover code when we discuss dealing with time and date objects next week.
+- We show code after we discuss time and date objects next week.
 
 ---
 
@@ -271,7 +322,7 @@ plt.show()
 # Qualitative Colormap
 
 - Used for nominal variables
-- Ideal colors to be very different (especially those adjacent on legend)
+- Ideal for colors to be very different (especially those adjacent on legend)
 - Avoid reds and greens to make as colorblind friendly as possible.
 - These is a subtle difference between the default qualitative scheme in Seaborn and the colorblind version.
 
@@ -279,7 +330,7 @@ plt.show()
 
 # Default
 
-```{python, out.width='50%'}
+```{python, out.width='50%', echo=T}
 sns.scatterplot(data = taxisdat, y='fare', x = 'distance', hue='pickup_borough')
 ```
 
@@ -287,7 +338,7 @@ sns.scatterplot(data = taxisdat, y='fare', x = 'distance', hue='pickup_borough')
 
 # Colorblind Pallette
 
-```{python, out.width='50%'}
+```{python, out.width='50%', echo=T}
 sns.scatterplot(data = taxisdat, y='fare', x = 'distance', hue='pickup_borough', palette = 'colorblind')
 ```
 
@@ -328,7 +379,7 @@ sns.scatterplot(data = taxisdat, y='fare', x = 'distance', hue='pickup_borough',
 
 # Gapminder
 
-- A famous example of a bubble chart is Hans Rosling's [gapminder presentation](https://www.youtube.com/watch?v=jbkSRLYSojo)..
+- A famous example of a bubble chart is Hans Rosling's [gapminder presentation](https://www.youtube.com/watch?v=jbkSRLYSojo).
 
 ```{r}
 knitr::include_graphics('img/gapminder.jpeg',dpi = 50)
@@ -340,7 +391,7 @@ knitr::include_graphics('img/gapminder.jpeg',dpi = 50)
 # Facetting
 
 - Notice that bubble plots using many different colors and marker shapes can be overly confusing.
-- Often it is clearer to use simpler plots, but more plots
+- Often it is clearer to use many simpler plots rather than one complicated plot.
 - This is known as facetting
 - We can facet with one variable or with two (across rows and columns).
 
@@ -364,7 +415,7 @@ g.map_dataframe(sns.scatterplot, y = "fare", x = "distance")
 
 # Facetting by a single variable
 
-```{python,echo=T, out.width='50%'}
+```{python,echo=T, out.width='80%'}
 g = sns.FacetGrid(taxisdat, col="pickup_borough")
 g.map_dataframe(sns.scatterplot, y = "fare", x = "distance")
 ```
@@ -391,7 +442,7 @@ g.map_dataframe(sns.histplot, x = "distance")
 
 # A warning
 
-- Even if you can display many variables on one plot that does not always mean you SHOULD do this.
+- Even if you can display many variables on one plot that does not always mean you *should* do this.
 - If too many variables are shown it becomes too difficult for the viewer to decode any information.
 - Complicated plots can be a useful as a step to work out some interesting features in the data.
 - Then simplify your plot to tell a story
@@ -465,7 +516,7 @@ class: middle, center, inverse
 
 # Wholesale data
 
-```{python}
+```{python, echo = T}
 ws = pd.read_csv('../data/wholesale.csv')
 ws
 ```

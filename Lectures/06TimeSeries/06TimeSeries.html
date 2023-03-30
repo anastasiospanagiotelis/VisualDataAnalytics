@@ -279,6 +279,9 @@ sns.scatterplot(data=flights, x = 'lag12', y = 'passengers')
 
 ---
 
+# Volatility clustering
+
+
 ```python
 dj['Returns']=dj['Price'].pct_change()
 g = sns.lineplot(data=dj, x = 'Date', y = 'Returns')
@@ -392,7 +395,7 @@ sns.lineplot(data = hleusa, x='Year', y='LEChange')
 - As a rough guide, consider lines making up a line plot.
 - The average angle of these should be about 45 degrees
 - Good software packages will do this by default.
-- If you reseize an image things may change.
+- If you resize an image things may change.
 - Always look at the axes of a line plot!
 
 ---
@@ -432,7 +435,7 @@ print(x)
 ```
 
 ```
-## 2023-01-12 19:17:37.113537
+## 2023-03-24 09:09:38.997607
 ```
 
 ```python
@@ -455,7 +458,7 @@ print(x-y)
 ```
 
 ```
-## 5415 days, 19:17:37.113537
+## 5486 days, 9:09:38.997607
 ```
 
 An interval can be added to a date
@@ -702,7 +705,9 @@ taxists
 
 
 ```python
-sns.lineplot(data = taxists, x='date', y='trips')
+g = sns.lineplot(data = taxists, x='date', y='trips')
+g.xaxis.set_major_locator(ticker.LinearLocator(6))
+plt.show()
 ```
 
 &lt;img src="06TimeSeries_files/figure-html/unnamed-chunk-27-31.png" width="50%" style="display: block; margin: auto;" /&gt;

@@ -208,7 +208,6 @@ fig.write_html('scatterbubble.html')
 
 # What can I do?
 
-- Use a log scale.
 - Can select groups according to continent.
 - With a static plot would need to facet.
 - If needed facetting is still available in plotly
@@ -322,7 +321,7 @@ class: middle, center, inverse
 - Generally have three elements
   - Contains multiple graphs.
   - It has interactive elements
-  - It is uses streames data
+  - It is uses streams of data
 - If the third condition is not met it is a *static dashboard*.
 - We will focus on the second condition
 
@@ -331,7 +330,7 @@ class: middle, center, inverse
 # Dashboards
 
 - Dashboards can get complicated, but code will comprise of two parts.
-  - The *layout* dicatates what the user sees, i.e. how the plots and any interactive elements are arranged.
+  - The *layout* dicates what the user sees, i.e. how the plots and any interactive elements are arranged.
   - The *callbacks* contains code for creating plots and processing the data depending on the users input.
 - To keep things simple we will only include one callback, a dashboard with multiple plots requires multiple callbacks.
 ---
@@ -339,7 +338,7 @@ class: middle, center, inverse
 # Using dashboards
 
 - Put all your code into one script
-- Run the scipt
+- Run the script
 - Open a browser
 - Navigate to 127.0.0.1:8050
   - This is the local server
@@ -412,7 +411,7 @@ app.run_server(debug=True)
 - Having too many plots on a dashboard
 - Having dashboards that are fun to play with but are not business focused.
   - Dashboard should lead to actionable decisions.
-- Ignoing principles of visualisation.
+- Ignoring principles of visualisation.
 
 ---
 
@@ -431,7 +430,7 @@ class: middle, center, inverse
 # Animation
 
 - One final trick we will learn is to do animations.
-- For example in the gapminder example we can show the plot as a video rather than have a use select each time.
+- For example in the gapminder example we can show the plot as a video rather than look at one year at a time.
 - This can be done using `matlotlib.animate`
 - The idea is similar to a flipbook
 
@@ -466,6 +465,7 @@ def animate(i):
     year=1952+i*5
     gmy = gm[gm['year']==year]
     g = sns.scatterplot(data = gmy, y = 'lifeExp',    x='gdpPercap',hue='continent', size = 'pop')
+    plt.title("Year="+str(year))
 
 ani = animation.FuncAnimation(fig=fig, func = animate, frames=12,repeat=True)
 ani.save('animation.gif',writer='imagemagick', fps=1)

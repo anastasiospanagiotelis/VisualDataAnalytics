@@ -59,7 +59,9 @@ class: center, middle, inverse
 - To report data using visual means rather than tables, enabling faster comparisons.
 --
 
-- For exploratory analysis to uncover new questions, 
+- For exploratory analysis
+--
+to uncover new questions, 
 --
 discover previously unknown patterns, 
 --
@@ -87,7 +89,7 @@ understand relationships between variables.
 
 ---
 
-# Anscombe's Quartet
+# Why not summary stats?
 
 - Anscombe's quartet is a synthetic dataset of pairs of variables.
 --
@@ -277,7 +279,7 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 
 ---
 
-# Data-ink ratio
+# More chartjunk
 
 ![LowDI](img/Chartjunk-example.svg)
 
@@ -344,7 +346,7 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 
 # Confusing Length and Area 
 
-- On the previous plot, the number of customers is mapped to length (height of computer)
+- On the previous plot, the number of customers is mapped to length (height of computer).
 --
 
 - The area of the 2D pictures of computers scale up more than their heights.
@@ -429,7 +431,7 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 - The percentages do not add up to 100.
 - In the plot on the left, the data are a time series.
 - Dates not given ('today' is 2016).
-- In the plot on the right, respondents can like more than one topic
+- In the plot on the right, respondents can like more than one topic.
 - In both cases the pie chart is a poor choice of visualisation for the data at hand.
 --
 
@@ -474,9 +476,9 @@ class: center, middle inverse
 Following discussion based on some Harvard Business Review articles
 --
 
-- How to make sure you're not using data just to justify decisions you've already made [ (link)](https://hbr.org/2018/10/how-to-make-sure-youre-not-using-data-just-to-justify-decisions-youve-already-made)
-- Use data to answer you key business questions[(link)](https://hbr.org/2020/02/use-data-to-answer-your-key-business-questions)
-- Visualisations that really work [(link)](https://hbr.org/2016/06/visualizations-that-really-work)
+- How to make sure you're not using data just to justify decisions you've already made [ (link)](https://hbr.org/2018/10/how-to-make-sure-youre-not-using-data-just-to-justify-decisions-youve-already-made).
+- Use data to answer you key business questions [(link)](https://hbr.org/2020/02/use-data-to-answer-your-key-business-questions)
+- Visualizations that really work [(link)](https://hbr.org/2016/06/visualizations-that-really-work)
   
 ---
 
@@ -635,5 +637,3 @@ class: inverse,center, middle
 
 # Questions?
 
-
----

@@ -256,6 +256,9 @@ sns.scatterplot(data=flights, x = 'lag12', y = 'passengers')
 
 
 ---
+
+# Volatility clustering
+
 ```{python, echo=TRUE, out.width='50%'}
 dj['Returns']=dj['Price'].pct_change()
 g = sns.lineplot(data=dj, x = 'Date', y = 'Returns')
@@ -361,7 +364,7 @@ sns.lineplot(data = hleusa, x='Year', y='LEChange')
 - As a rough guide, consider lines making up a line plot.
 - The average angle of these should be about 45 degrees
 - Good software packages will do this by default.
-- If you reseize an image things may change.
+- If you resize an image things may change.
 - Always look at the axes of a line plot!
 
 ---
@@ -547,7 +550,9 @@ taxists
 # Lineplot
 
 ```{python, echo=T, out.width='50%'}
-sns.lineplot(data = taxists, x='date', y='trips')
+g = sns.lineplot(data = taxists, x='date', y='trips')
+g.xaxis.set_major_locator(ticker.LinearLocator(6))
+plt.show()
 ```
 
 ---

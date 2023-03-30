@@ -44,7 +44,17 @@ knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
   - Find multi-modality
   - Find skew
 - Understanding the distribution is about generating interesting questions for further analysis.
+- Thinking probabilistically is about thinking about distributions and not just the mean.
   
+---
+
+# Examples
+
+- We will use two dataets that can be directly loaded from the `seaborn` package.
+  - The `taxis` dataset with data on pickup and drop off locations, fares, payment type etc., in New York City.
+  - The `diamonds` dataset with information on size, cut clarity, price, etc. of diamonds.
+- These contain categorical (nominal and ordinal) and numeric variables.  
+
 ---
 
 class: center, middle, inverse
@@ -62,14 +72,7 @@ class: center, middle, inverse
 
 ---
 
-# Examples
 
-- We will use two dataets that can be directly loaded from the `seaborn` package.
-  - The `taxis` dataset with data on pickup and drop off locations, fares, payment type etc., in New York City.
-  - The `diamonds` dataset with information on size, cut clarity, price, etc. of diamonds.
-- These contain nominal, ordinal and numeric variables.  
-
----
 
 # Taxis data
 
@@ -82,7 +85,7 @@ taxisdat
 
 ---
 
-# Bar plot of pick up
+# Bar plot of pick up borough
 
 ```{python,echo =T, out.width="50%"}
 sns.countplot(data = taxisdat, x='pickup_borough')
@@ -182,7 +185,7 @@ sns.countplot(data=diam,x='clarity',color='tab:blue')
 
 - If there are 
   - A large number of categories,
-  - If the categories all have similar frequncies,
+  - If the categories all have similar frequencies,
 - then consider using a lollipop chart.
 - This can be done with some data munging using `value_counts` and the `stem` function in `matplotlib`.
 
@@ -216,6 +219,7 @@ plt.show()
 import matplotlib.pyplot as plt
 plt.stem(freq)
 plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.subplots_adjust(bottom=0.5)
 plt.show()
 ```
 
@@ -301,7 +305,7 @@ class: middle, center, inverse
 
 # Histogram
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.histplot(taxisdat['fare'])
 ```
 
@@ -319,7 +323,7 @@ sns.histplot(taxisdat['fare'])
 
 # Change number of bins
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.histplot(taxisdat['fare'], bins=10)
 ```
 
@@ -327,7 +331,7 @@ sns.histplot(taxisdat['fare'], bins=10)
 
 # Change number of bins
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.histplot(taxisdat['fare'], bins=2000)
 ```
 
@@ -337,7 +341,7 @@ sns.histplot(taxisdat['fare'], bins=2000)
 
 - By having too many (or too few) bins we can miss out on important features of data.
 - In the above example the spike of fares around $50 is not seen when the number of bins is changed.
-- In general default choice of bin number is good, howver it is always a good idea to experiment.
+- In general default choice of bin number is good, however it is always a good idea to experiment.
 
 ---
 
@@ -348,7 +352,7 @@ sns.histplot(taxisdat['fare'], bins=2000)
 
 $$\hat{f}(x)=\frac{1}{n}\sum\limits_{i=1}^{n} K_h(x-x_i)$$
 - The function $K_h(.)$ is called the *kernel*.
-- Can take many form.
+- Can take many forms.
 - The function depends on a bandwidth $h$ (to be explained soon).
 
 ---
@@ -356,7 +360,7 @@ $$\hat{f}(x)=\frac{1}{n}\sum\limits_{i=1}^{n} K_h(x-x_i)$$
 # Intuition behind KDE
 
 - If I observe a point in some location, that evidence supports that there is probability that a point comes from a nearby region.
-- Imagine I drop a mountain of sand at the location I observe the point.
+- Imagine I drop a mountain of sand at the location I observe the data point.
 - The shape of the sand is the kernel function.
 - If I repeat this for $n$ observations the result is the KDE.
 
@@ -441,6 +445,7 @@ points(x[5:20],rep(0,16),col='red')
 - The bandwidth $h$ controls whether the mountain of sand is 'peaked' or 'flat' .
 - For small bandwidth the mountain of sand is more peaked and the KDE is more wiggly.
 - For large bandwidth the mountain of sand is more flat and the KDE is more smooth.
+- This is similar to the role of the number of bins in the histogram.
 - There are sensible defaults used by visualisation packages.
 
 ---
@@ -457,7 +462,7 @@ sns.kdeplot(taxisdat['fare'])
 #KDE plot (double default BW)
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.kdeplot(taxisdat['fare'], bw_adjust = 2)
 ```
 
@@ -466,7 +471,7 @@ sns.kdeplot(taxisdat['fare'], bw_adjust = 2)
 #KDE plot (half default BW)
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.kdeplot(taxisdat['fare'], bw_adjust = 0.5)
 ```
 
@@ -485,7 +490,7 @@ sns.kdeplot(taxisdat['fare'], bw_adjust = 0.5)
 #Violin plot
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.violinplot(taxisdat['fare'])
 ```
 
@@ -508,7 +513,7 @@ sns.violinplot(taxisdat['fare'])
 #Box plot
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.boxplot(taxisdat['fare'])
 ```
 
@@ -518,7 +523,7 @@ sns.boxplot(taxisdat['fare'])
 # Fences
 
 - For most implementations, a boxplot actually shows an upper and lower fence rather than the maximum and minimum.
-- The upper (lower) fence is given by the median plus (minus) 1.5 times the IQR.
+- The upper (lower) fence is given by the third (first) quartile plus (minus) 1.5 times the IQR.
 - The maximum (minimum) is shown instead if it is less (greater) than the upper (lower) fence.
 
 ---
@@ -543,7 +548,7 @@ sns.boxplot(taxisdat['fare'])
 # Rug plot
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.rugplot(taxisdat['fare'])
 ```
 
@@ -554,7 +559,7 @@ sns.rugplot(taxisdat['fare'])
 # Rug plot (jittered)
 
 
-```{python,echo =T, out.width="50%"}
+```{python,echo =T, out.width="75%"}
 sns.stripplot(y=taxisdat['fare'])
 ```
 
