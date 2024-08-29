@@ -126,18 +126,18 @@ taxisdat
 ```
 
 ```
-##                    pickup              dropoff  ...  pickup_borough  dropoff_borough
-## 0     2019-03-23 20:21:09  2019-03-23 20:27:24  ...       Manhattan        Manhattan
-## 1     2019-03-04 16:11:55  2019-03-04 16:19:00  ...       Manhattan        Manhattan
-## 2     2019-03-27 17:53:01  2019-03-27 18:00:25  ...       Manhattan        Manhattan
-## 3     2019-03-10 01:23:59  2019-03-10 01:49:51  ...       Manhattan        Manhattan
-## 4     2019-03-30 13:27:42  2019-03-30 13:37:14  ...       Manhattan        Manhattan
-## ...                   ...                  ...  ...             ...              ...
-## 6428  2019-03-31 09:51:53  2019-03-31 09:55:27  ...       Manhattan        Manhattan
-## 6429  2019-03-31 17:38:00  2019-03-31 18:34:23  ...          Queens            Bronx
-## 6430  2019-03-23 22:55:18  2019-03-23 23:14:25  ...        Brooklyn         Brooklyn
-## 6431  2019-03-04 10:09:25  2019-03-04 10:14:29  ...        Brooklyn         Brooklyn
-## 6432  2019-03-13 19:31:22  2019-03-13 19:48:02  ...        Brooklyn         Brooklyn
+##                   pickup             dropoff  ...  pickup_borough  dropoff_borough
+## 0    2019-03-23 20:21:09 2019-03-23 20:27:24  ...       Manhattan        Manhattan
+## 1    2019-03-04 16:11:55 2019-03-04 16:19:00  ...       Manhattan        Manhattan
+## 2    2019-03-27 17:53:01 2019-03-27 18:00:25  ...       Manhattan        Manhattan
+## 3    2019-03-10 01:23:59 2019-03-10 01:49:51  ...       Manhattan        Manhattan
+## 4    2019-03-30 13:27:42 2019-03-30 13:37:14  ...       Manhattan        Manhattan
+## ...                  ...                 ...  ...             ...              ...
+## 6428 2019-03-31 09:51:53 2019-03-31 09:55:27  ...       Manhattan        Manhattan
+## 6429 2019-03-31 17:38:00 2019-03-31 18:34:23  ...          Queens            Bronx
+## 6430 2019-03-23 22:55:18 2019-03-23 23:14:25  ...        Brooklyn         Brooklyn
+## 6431 2019-03-04 10:09:25 2019-03-04 10:14:29  ...        Brooklyn         Brooklyn
+## 6432 2019-03-13 19:31:22 2019-03-13 19:48:02  ...        Brooklyn         Brooklyn
 ## 
 ## [6433 rows x 14 columns]
 ```
@@ -262,6 +262,7 @@ sns.countplot(data=diam,x='clarity',color='tab:blue')
 # Coloring
 
 - Although by default categories have different colors this is not strictly necessary.
+  - The default behaviour may be different for different package versions.
 - Arguably it is distracting, especially when there are more categories.
 - Later on we will use color to display data
   - For example grouping by a second variable and mapping that to color.
@@ -281,7 +282,7 @@ sns.countplot(data=diam,x='clarity',color='tab:blue')
 
 # Data preparation
 
-For simpler graph, will only consider dropoff in Manhattan
+For simpler graph, will only consider pickup in Bronx
 
 
 ```python
@@ -292,41 +293,41 @@ freq
 ```
 ## pickup_zone
 ## East Concourse/Concourse Village       9
-## Parkchester                            8
 ## Mott Haven/Port Morris                 8
+## Parkchester                            8
+## Mount Hope                             5
 ## Co-Op City                             5
 ## East Tremont                           5
-## Mount Hope                             5
 ## Claremont/Bathgate                     5
 ## Soundview/Castle Hill                  4
 ## Morrisania/Melrose                     4
 ## Van Nest/Morris Park                   3
-## University Heights/Morris Heights      3
 ## Highbridge                             3
+## University Heights/Morris Heights      3
 ## Belmont                                3
-## Bronxdale                              2
-## Fordham South                          2
-## Kingsbridge Heights                    2
-## Melrose South                          2
-## Allerton/Pelham Gardens                2
+## West Concourse                         2
+## Westchester Village/Unionport          2
 ## Williamsbridge/Olinville               2
 ## Van Cortlandt Village                  2
-## Westchester Village/Unionport          2
-## Schuylerville/Edgewater Park           2
 ## Soundview/Bruckner                     2
+## Schuylerville/Edgewater Park           2
+## Allerton/Pelham Gardens                2
 ## Norwood                                2
-## West Concourse                         2
-## Bedford Park                           1
-## Bronx Park                             1
-## West Farms/Bronx River                 1
-## Spuyten Duyvil/Kingsbridge             1
-## Crotona Park East                      1
-## Riverdale/North Riverdale/Fieldston    1
-## Hunts Point                            1
-## Pelham Parkway                         1
+## Melrose South                          2
+## Kingsbridge Heights                    2
+## Fordham South                          2
+## Bronxdale                              2
 ## Pelham Bay                             1
+## Pelham Parkway                         1
+## Riverdale/North Riverdale/Fieldston    1
+## Bedford Park                           1
+## Spuyten Duyvil/Kingsbridge             1
+## Hunts Point                            1
+## Crotona Park East                      1
+## West Farms/Bronx River                 1
+## Bronx Park                             1
 ## Woodlawn/Wakefield                     1
-## dtype: int64
+## Name: count, dtype: int64
 ```
 
 ---
@@ -337,7 +338,7 @@ freq
 ```python
 import matplotlib.pyplot as plt
 plt.stem(freq)
-plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.xticks(range(0,len(freq.index)), freq.index, rotation='vertical')
 plt.show()
 ```
 
@@ -422,7 +423,7 @@ class: middle, center, inverse
 
 - The equivalent of a bar chart for numerical data is a histogram.
 - The area of each bar represents the frequency within a certain interval.
-- If all bars have equal width then frquency is mapped to the length of the bars too.  
+- If all bars have equal width then frequency is mapped to the length of the bars too.  
 - Zero should always be included on the y axis (but not necessarily x axis).
 
 ---

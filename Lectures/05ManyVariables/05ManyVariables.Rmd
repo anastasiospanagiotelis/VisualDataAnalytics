@@ -21,7 +21,7 @@ output:
 - Using color
   - All about colormaps
 - Bubble plot
-- Facetting
+- Faceting
 - Parallel Coordinates
 - Spider chart
 
@@ -199,8 +199,8 @@ knitr::include_graphics('img/ViridisContinuousContinuous.png')
 knitr::include_graphics('img/mona-lisa-rainbow.png',dpi = 100)
 ```
 
-
 ---
+
 
 #Viridis colormap
 
@@ -258,7 +258,7 @@ vcenter = 0
 vmin, vmax = wb['Net Trade'].min(), wb['Net Trade'].max()
 normalize = mcolors.TwoSlopeNorm(vcenter=vcenter, vmin=vmin, vmax=vmax)
 colormap = cm.RdBu
-plt.scatter(y=wb['Current Account'],x=wb['GDP growth'],c=wb['Net Trade'],norm=normalize,cmap=colormap,ax=ax,edgecolor='black')
+sns.scatterplot(y=wb['Current Account'],x=wb['GDP growth'],c=wb['Net Trade'],norm=normalize,cmap=colormap,ax=ax,edgecolor='black')
 
 scalarmappaple = cm.ScalarMappable(norm=normalize, cmap=colormap)
 scalarmappaple.set_array(wb['Net Trade'])
@@ -312,7 +312,7 @@ fig, ax = plt.subplots()
 cmap = sns.color_palette('twilight', as_cmap = True)
 s = ax.scatter(x = taxisdat['distance'], y = taxisdat['fare'], c=taxisdat['pickup_dow'], cmap=cmap)
 cbar = fig.colorbar(mappable=s, ax=ax)
-cbar.set_ticks(np.arange(6)+0.5)
+cbar.set_ticks(np.arange(7)+0.5)
 cbar.set_ticklabels(['Mon','Tue','Wed','Thu','Fri','Sat','Sun'])
 plt.show()
 ```
@@ -392,7 +392,7 @@ knitr::include_graphics('img/gapminder.jpeg',dpi = 50)
 
 - Notice that bubble plots using many different colors and marker shapes can be overly confusing.
 - Often it is clearer to use many simpler plots rather than one complicated plot.
-- This is known as facetting
+- This is known as faceting
 - We can facet with one variable or with two (across rows and columns).
 
 ---
@@ -407,7 +407,7 @@ g.map_dataframe(sns.scatterplot, y = "fare", x = "distance")
 
 # Facetting
 
-- Facetting can show roughly which categories have the most observations.
+- Faceting can show roughly which categories have the most observations.
 - Can show categories with most outliers.
 - Can show us if and how a relationship between variables can depend on a nominal variable (although not in the previous plot).
 
@@ -640,7 +640,7 @@ class: middle, center, inverse
 - There are several ways to show multiple variables on a plot.
   - Color
   - Size/shape
-  - Facetting
+  - Faceting
 - Do not generate complicated plots for the sake of it. Always look for a story.
 
 ---

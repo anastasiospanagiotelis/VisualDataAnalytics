@@ -133,6 +133,7 @@ sns.lineplot(data = hleusa, x='Year', y='Life_Expectancy')
 
 
 ```python
+import matplotlib.ticker as ticker
 dj = sns.load_dataset('dowjones')
 g = sns.lineplot(data=dj, x = 'Date', y = 'Price')
 g.xaxis.set_major_locator(ticker.LinearLocator(6))
@@ -163,7 +164,7 @@ plt.show()
 
 - The data roughly repeat every 12 periods.
 - The pattern is amplified over time (which is in line with the increasing trend of the data).
-- For higher frequncy data there may be multiple seasonalities (e.g, day of week and month of year).
+- For higher freqeuncy data there may be multiple seasonalities (e.g, day of week and month of year).
 
 ---
 
@@ -250,6 +251,7 @@ sns.lineplot(data = hleusa, x='Year', y='LE%Change')
 
 
 ```python
+flights = sns.load_dataset('flights')
 flights['firstlag']=flights['passengers'].shift()
 sns.scatterplot(data=flights, x = 'firstlag', y = 'passengers')
 ```
@@ -361,7 +363,7 @@ Likely to be misinterpreted.
 # Both axes
 
 - Another way to manipulate interpretations is through the *aspect ratio*.
-- The aspect ratio is the ratio of units on the y axis relateive to units on the x axis.
+- The aspect ratio is the ratio of units on the y axis relative to units on the x axis.
 - By resizing a plot, features of the time series may be exaggerated (either intentionally or unintentionally).
 
 ---
@@ -435,7 +437,7 @@ print(x)
 ```
 
 ```
-## 2023-03-24 09:09:38.997607
+## 2024-08-25 15:57:28.093120
 ```
 
 ```python
@@ -458,7 +460,7 @@ print(x-y)
 ```
 
 ```
-## 5486 days, 9:09:38.997607
+## 6006 days, 15:57:28.093120
 ```
 
 An interval can be added to a date

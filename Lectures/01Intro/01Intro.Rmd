@@ -431,7 +431,7 @@ For more see the video [here](https://methods.sagepub.com/video/four-pillars-of-
 - The percentages do not add up to 100.
 - In the plot on the left, the data are a time series.
 - Dates not given ('today' is 2016).
-- In the plot on the right, respondents can like more than one topic.
+- In the plot on the right, respondents can like more than one topping.
 - In both cases the pie chart is a poor choice of visualisation for the data at hand.
 --
 
@@ -511,7 +511,7 @@ Following discussion based on some Harvard Business Review articles
 - Identify KBQs
   - Is there sufficient quality control on tyres leaving factory?
   - How long do customers take to respond to a low pressure alert?
-  - Can we predict when when tyres go flat?
+  - Can we predict when tyres go flat?
 --
 
 - Prioritise KBQs

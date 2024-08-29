@@ -174,6 +174,7 @@ sns.countplot(data=diam,x='clarity',color='tab:blue')
 # Coloring
 
 - Although by default categories have different colors this is not strictly necessary.
+  - The default behaviour may be different for different package versions.
 - Arguably it is distracting, especially when there are more categories.
 - Later on we will use color to display data
   - For example grouping by a second variable and mapping that to color.
@@ -193,7 +194,7 @@ sns.countplot(data=diam,x='clarity',color='tab:blue')
 
 # Data preparation
 
-For simpler graph, will only consider dropoff in Manhattan
+For simpler graph, will only consider pickup in Bronx
 
 ```{python, echo=T}
 freq = taxisdat[taxisdat['pickup_borough']=='Bronx'].value_counts('pickup_zone')
@@ -207,7 +208,7 @@ freq
 ```{python, echo=T, eval=F}
 import matplotlib.pyplot as plt
 plt.stem(freq)
-plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.xticks(range(0,len(freq.index)), freq.index, rotation='vertical')
 plt.show()
 ```
 
@@ -218,7 +219,7 @@ plt.show()
 ```{python, echo=F, eval=T, out.width="60%", message = F, results='hide'}
 import matplotlib.pyplot as plt
 plt.stem(freq)
-plt.xticks(range(1,len(freq.index)+1), freq.index, rotation='vertical')
+plt.xticks(range(0,len(freq.index)), freq.index, rotation='vertical')
 plt.subplots_adjust(bottom=0.5)
 plt.show()
 ```
@@ -298,7 +299,7 @@ class: middle, center, inverse
 
 - The equivalent of a bar chart for numerical data is a histogram.
 - The area of each bar represents the frequency within a certain interval.
-- If all bars have equal width then frquency is mapped to the length of the bars too.  
+- If all bars have equal width then frequency is mapped to the length of the bars too.  
 - Zero should always be included on the y axis (but not necessarily x axis).
 
 ---

@@ -99,7 +99,7 @@ class: center, middle, inverse
 - There are two options
   - Grouped bar charts
   - Stacked bar charts
-- We will investiate using the taxis and diamonds data also used last week.
+- We will investigate using the taxis and diamonds data also used last week.
 
 
 
@@ -131,7 +131,7 @@ sns.countplot(data=diam, x='clarity', hue='cut')
 
 # Stacked bar chart
 
-First must prepare data by creating corss tab
+First must prepare data by creating cross tab
 
 
 ```python
@@ -171,7 +171,7 @@ diamct.plot(kind = 'bar', stacked = True)
 
 - Can easily see
   - Frequencies of categories for clarity
-  - Relative freqeuncy of cut within a single category of clarity
+  - Relative frequency of cut within a single category of clarity
 - Harder to make a comparison for
   - Frequency of cut across categories of clarity (e.g. hard to quickly tell if there are more Good/VS2 or Good/SI2)
   
@@ -303,7 +303,7 @@ sns.swarmplot(data = taxisdat[taxisdat['dropoff_borough']=='Bronx'], y = 'fare',
 
 - Boxplots clearly show that Manhattan has the lowest median fare and less volatility in the fare.
 - Violin plots show three modes in the Queens distribution (cannot be seen using boxplots).
-- Strip plots show that frequent value at around $50 occurs for Manattan and Queens.
+- Strip plots show that frequent value at around $50 occurs for Manhattan and Queens.
 - No single correct plot, use the plot that tells your story.
 
 ---
@@ -442,7 +442,7 @@ sns.lmplot(data = mpg, y = 'mpg', x = 'displacement', lowess=True)
 #Details
 
 - In the LOWESS algorithm, the smoothing parameter we estimate a regression function ( `\(\hat{y}=f(x)\)` ) rather than a regression line.
-- The smoothness of this function can be tuned by changing the number of nearest  neigbours.
+- The smoothness of this function can be tuned by changing the number of nearest  neighbours.
 - Local regressions estimated by weighted least squares so that closer neighbours are given more influence.
 - LOWESS is not ideal for large datasets.
 
@@ -615,7 +615,7 @@ class: middle, center, inverse
 - Visualising two variables helps us to understand about the distribution of the variables including
   - Modes
   - Outliers
-- In adddition we can understand more about the relationship between the two variables
+- In addition we can understand more about the relationship between the two variables
   - Direction of relationship.
   - Whether relationship is linear
 - Log transformations can be useful to help visualise variables.

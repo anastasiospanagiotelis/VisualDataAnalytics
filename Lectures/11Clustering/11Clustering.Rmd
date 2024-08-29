@@ -364,7 +364,7 @@ library(magrittr)
 - The calligraphic script $\mathcal{A}$ or $\mathcal{B}$ denotes a cluster with possibly more than one point.  
 --
 
-- The bold scipt ${\mathbf a}_i$ or ${\mathbf b}_j$ denotes a vector of attributes (e.g. age and income) for each observation.
+- The bold script ${\mathbf a}_i$ or ${\mathbf b}_j$ denotes a vector of attributes (e.g. age and income) for each observation.
 --
 
 - Rather than vectors, it is much easier to think of each observation as a point in a scatterplot. 
@@ -405,6 +405,53 @@ points(x2[,1],x2[,2],col='red',pch=20,cex=3)
 lines(c(x1[12,1],x2[6,1]),c(x1[12,2],x2[6,2]),lwd=4)
 text(mean(c(x1[12,1],x2[6,1])),mean(c(x1[12,2],x2[6,2])),labels='68.83',pos=4,cex=3)
 ```
+
+---
+
+
+# Complete Linkage
+
+Another way of defining the distance between $\mathcal{A}$ and $\mathcal{B}$ is
+
+$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\max}D({\mathbf a}_i,{\mathbf b}_j)$$
+
+This is called **complete linkage** or **furthest neighbour**.
+
+
+---
+
+# Complete Linkage
+
+```{r clinkp,echo=FALSE,fig.align='center'}
+set.seed(4)
+mu1<-c(15,30)
+mu2<-c(85,120)
+sigma<-matrix(c(25,30,30,49),2,2)
+x1<-rmvt(30,df=5,sigma)+mu1
+x2<-rmvnorm(25,mu2,sigma)
+x<-rbind(x1,x2)
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+```
+
+---
+
+# Complete Linkage
+
+
+```{r clink,echo=FALSE,fig.align='center'}
+plot(x[,1],x[,2],col='blue',pch=20,cex=3,main='Clusters',xlab='',ylab='')
+points(x2[,1],x2[,2],col='red',pch=20,cex=3)
+lines(c(x1[23,1],x2[4,1]),c(x1[23,2],x2[4,2]),lwd=4)
+text(mean(c(x1[23,1],x2[4,1])),mean(c(x1[23,2],x2[4,2])),labels='160.01',pos=4,cex=3)
+```
+
+---
+
+# Complete linkage
+
+- In the previous example **all** points in the red cluster are within a distance of 160.01 of **all** points in the blue cluster.
+- This is why it is called **complete** linkage.
+
 
 ---
 
@@ -712,7 +759,7 @@ plt.show()
 
 # More about the code
 
-- The hierarchical is done using the scipy package.
+- The hierarchical clustering is done using the scipy package.
 - Information can also be pulled out of the object created by this package.
 - By default this package does not do simple linkage.
 - We will now see why.
@@ -1072,14 +1119,6 @@ lines(c(mean(x[(indc==1),1]),mean(x[(indc==2),1])),c(mean(x[(indc==1),2]),mean(x
 --
 
 - Ward’s method merges two clusters to minimise within cluster variance.<!--D-->
---
-
-- Two variations implemented in R.<!--D-->
---
-
-  + `Ward.D2` is the same as the original Ward paper.
-  + `Ward.D` is actually based on a mistake but can still work quite well.
-
 
 ---
 
@@ -1133,7 +1172,7 @@ class: middle, center, inverse
 - We have covered hierarchical clustering
 - In BUSS6002 you will also cover *k-means clustering*.
 - An advantage of hierarchical clustering is visualisation via the dendrogram.
-- However the ideas of understanding when obseravations are similar is useful in many other areas of business analytics.
+- However the ideas of understanding when observations are similar, is useful in many other areas of business analytics.
 
 ---
 

@@ -83,8 +83,8 @@ class: middle, center, inverse
   - Vertices are individuals / users
   - Edges indicate whether two individuals are *friends* on the social network
 - In a food delivery app
-  - Edges may be restaurants and suburbs
-  - Vertices indicate whether a restaurant delivers to a suburb.
+  - Vertices may be restaurants and suburbs
+  - Edges indicate whether a restaurant delivers to a suburb.
   
 
 ---
@@ -623,14 +623,14 @@ where $d_{i,j}$ is the length of the shortest path from vertex $i$ to vertex $j$
 
 ---
 
-# Closeness Centrality of Ike
+# Closeness Centrality of Jane
 
-- Ike is a distance of
+- Jane is a distance of
   - 1 from Ike
   - 2 from Heather
   - 3 from Fernando and Garth
   - 4 from everyone else
-- Closeness centrality is $10/(1+2+2\times 3+5\times4)\approx 0.349$
+- Closeness centrality is $9/(1+2+2\times 3+5\times4)\approx 0.3103$
 
 ---
 
@@ -702,7 +702,7 @@ Must find some value $\pmb{c}$ such that
 $$\pmb{A}\pmb{c}=\lambda\pmb{c}$$
 This is a famous problem in math known as the eigenvalue problem.
 
-There will in general be multiple solutions. However only one solution satisfies the condition that $\lamba$ and all centrality measures are positive.
+There will in general be multiple solutions. However only one solution satisfies the condition that $\lambda$ and all centrality measures are positive.
 
 ---
 

@@ -327,7 +327,7 @@ class: middle, center, inverse
 - The calligraphic script `\(\mathcal{A}\)` or `\(\mathcal{B}\)` denotes a cluster with possibly more than one point.  
 --
 
-- The bold scipt `\({\mathbf a}_i\)` or `\({\mathbf b}_j\)` denotes a vector of attributes (e.g. age and income) for each observation.
+- The bold script `\({\mathbf a}_i\)` or `\({\mathbf b}_j\)` denotes a vector of attributes (e.g. age and income) for each observation.
 --
 
 - Rather than vectors, it is much easier to think of each observation as a point in a scatterplot. 
@@ -354,6 +354,39 @@ This is called **single linkage** or **nearest neighbour**.
 
 
 &lt;img src="11Clustering_files/figure-html/slink-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+# Complete Linkage
+
+Another way of defining the distance between `\(\mathcal{A}\)` and `\(\mathcal{B}\)` is
+
+`$$D(\mathcal{A},\mathcal{B})=\underset{i,j}{\max}D({\mathbf a}_i,{\mathbf b}_j)$$`
+
+This is called **complete linkage** or **furthest neighbour**.
+
+
+---
+
+# Complete Linkage
+
+&lt;img src="11Clustering_files/figure-html/clinkp-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete Linkage
+
+
+&lt;img src="11Clustering_files/figure-html/clink-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Complete linkage
+
+- In the previous example **all** points in the red cluster are within a distance of 160.01 of **all** points in the blue cluster.
+- This is why it is called **complete** linkage.
+
 
 ---
 
@@ -616,7 +649,7 @@ plt.show()
 
 # More about the code
 
-- The hierarchical is done using the scipy package.
+- The hierarchical clustering is done using the scipy package.
 - Information can also be pulled out of the object created by this package.
 - By default this package does not do simple linkage.
 - We will now see why.
@@ -872,14 +905,6 @@ points in the cluster.&lt;!--D--&gt;
 --
 
 - Ward’s method merges two clusters to minimise within cluster variance.&lt;!--D--&gt;
---
-
-- Two variations implemented in R.&lt;!--D--&gt;
---
-
-  + `Ward.D2` is the same as the original Ward paper.
-  + `Ward.D` is actually based on a mistake but can still work quite well.
-
 
 ---
 
@@ -933,7 +958,7 @@ class: middle, center, inverse
 - We have covered hierarchical clustering
 - In BUSS6002 you will also cover *k-means clustering*.
 - An advantage of hierarchical clustering is visualisation via the dendrogram.
-- However the ideas of understanding when obseravations are similar is useful in many other areas of business analytics.
+- However the ideas of understanding when observations are similar, is useful in many other areas of business analytics.
 
 ---
 

@@ -748,7 +748,7 @@ NBAmerge
 # Different type of merge
 
 - Left: Keep all entries from first data frame
-- Right: Keep all entries from first data frame
+- Right: Keep all entries from second data frame
 - Inner: Keep all entries that appear in both data frames
 - Outer: Keep all entries that appear in either data frame
 
@@ -835,7 +835,7 @@ class: inverse, middle, center
 
 - Tells us whether we have more or less of a characteristic, but not how much more or less.
 - Example: rate players as good, very good, excellent.
-- If we assign numbers to nominal categories it still does not make sense to add subtract these numbers.
+- If we assign numbers to nominal categories it still does not make sense to add or subtract these numbers.
 - However the median (and the mode) still make sense.
 
 ---
@@ -927,7 +927,7 @@ class: inverse, middle, center
 - Duplicated entries
   - Can be removed using `drop_duplicates` function in pandas.
 - Data entry errors
-  - For example cannot score 20000 points in 3 minutes.
+  - For example, one cannot score 20000 points in 3 minutes.
   - Requires domain knowledge.
   - These issues can be discovered during visualisation.
 
