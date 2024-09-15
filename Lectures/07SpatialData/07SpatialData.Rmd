@@ -28,7 +28,7 @@ output:
 ```{r,include=FALSE}
 library(reticulate)
 #use_virtualenv('~/anaconda3/envs/geo_env')
-use_python('~/anaconda3/envs/geo_env/bin/python3')
+use_python('~/anaconda3/bin/python3')
 matplotlib<-import('matplotlib')
 matplotlib$use("Agg",force=TRUE)
 knitr::opts_chunk$set(fig.align='center',echo=FALSE,message = F,warning = F)
@@ -155,7 +155,7 @@ aus.geometry = aus.geometry.simplify(0.001)
 # Australia
 
 ```{python,echo=T}
-geoplot.polyplot(aus, geoplot.crs.Mercator())
+aus.plot()
 ```
 
 ---
@@ -163,14 +163,14 @@ geoplot.polyplot(aus, geoplot.crs.Mercator())
 # Australia
 
 ```{python,echo=T}
-geoplot.polyplot(aus, geoplot.crs.Robinson())
+aus.boundary.plot()
 ```
 
 ---
 
 # Summary
 
-- The Mercator projection looks OK for Australia
+- The default projection looks OK for Australia
 - However we don't simply want to plot maps
 - We want to add *data* to these maps.
 - This can be done using a choropleth

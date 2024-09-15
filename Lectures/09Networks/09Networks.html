@@ -4,7 +4,7 @@
     <title>Week 9:VisualisingNetworks</title>
     <meta charset="utf-8" />
     <meta name="author" content="Visual Data Analytics" />
-    <script src="libs/header-attrs-2.16/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.28/header-attrs.js"></script>
     <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="../css/mtheme.css" type="text/css" />
     <link rel="stylesheet" href="../css/mod.css" type="text/css" />
@@ -143,7 +143,7 @@ class: middle, center, inverse
 - We can build a network from a pandas data frame
 
 
-```python
+``` python
 import networkx as nx
 df = pd.DataFrame({ 'from':['A', 'A', 'A','B','C'], 'to':['B', 'C', 'D','D','D']})
 df
@@ -163,8 +163,7 @@ df
 # Drawing graph
 
 
-```python
-
+``` python
 G=nx.from_pandas_edgelist(df, 'from', 'to')
 nx.draw(G, with_labels=True)
 plt.show()
@@ -178,8 +177,7 @@ plt.show()
 # To look nicer
 
 
-```python
-
+``` python
 G=nx.from_pandas_edgelist(df, 'from', 'to')
 nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6)
 plt.show()
@@ -225,8 +223,7 @@ plt.show()
 # Set seed
 
 
-```python
-
+``` python
 G=nx.from_pandas_edgelist(df, 'from', 'to')
 nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos=nx.fruchterman_reingold_layout(G,seed=10))
 plt.show()
@@ -239,8 +236,7 @@ plt.show()
 # Same layout
 
 
-```python
-
+``` python
 G=nx.from_pandas_edgelist(df, 'from', 'to')
 nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos=nx.fruchterman_reingold_layout(G,seed=10))
 plt.show()
@@ -428,10 +424,10 @@ Another Hamiltonian Path
 # As a graph
 
 
-```python
+``` python
 nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS']})
 G=nx.from_pandas_edgelist(nem, 'from', 'to')
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -460,10 +456,10 @@ plt.show()
 
 
 
-```python
+``` python
 nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS'], 
 'capacity':[1380,1770,495, 500]})
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = nem['capacity']/500, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -475,8 +471,8 @@ plt.show()
 
 
 
-```python
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, edge_color = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+``` python
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, edge_color = nem['capacity']/500, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -503,7 +499,7 @@ plt.show()
 # Construct graph
 
 
-```python
+``` python
 nem = pd.DataFrame({ 
   'from':['QLD', 'NSW', 'SA','VIC'], 
   'to':['NSW', 'VIC', 'VIC','TAS'],
@@ -521,8 +517,8 @@ Gd=nx.from_pandas_edgelist(
 # Directed graph
 
 
-```python
-nx.draw(Gd, arrows=True, with_labels=True, node_size=2000, font_size=20, width = nem['flow']/100, pos= nx.nx.fruchterman_reingold_layout(Gd, seed=20))
+``` python
+nx.draw(Gd, arrows=True, with_labels=True, node_size=2000, font_size=20, width = nem['flow']/100, pos= nx.fruchterman_reingold_layout(Gd, seed=20))
 plt.show()
 ```
 
@@ -753,7 +749,7 @@ class: middle, center, inverse
 
 
 
-```python
+``` python
 df = pd.DataFrame({  'customer':['Bec', 'Chao', 'Anastasios', 'Bec','Anastasios','Bec','Chao'], 'restaurant':['Atom', 'Atom', 'Beirut','Beirut','Cafe','Cafe','Cafe']})
 G=nx.from_pandas_edgelist(df, 'customer', 'restaurant')
 ```
@@ -763,9 +759,7 @@ G=nx.from_pandas_edgelist(df, 'customer', 'restaurant')
 # Bipartite graph
 
 
-```python
-
-
+``` python
 nx.draw(G, with_labels=True, node_size=3000, font_size=15, width = 6, pos=nx.bipartite_layout(G, nodes=['Anastasios','Bec','Chao']))
 plt.show()
 ```
@@ -794,7 +788,7 @@ plt.show()
 # Setup
 
 
-```python
+``` python
 import plotly.graph_objects as go
 source = [0,0,1,1,1,2,2]
 target = [4,5,3,4,5,3,5]

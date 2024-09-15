@@ -429,7 +429,7 @@ plt.show()
 ```{python, echo=T, out.width = '50%'}
 nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS']})
 G=nx.from_pandas_edgelist(nem, 'from', 'to')
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -458,7 +458,7 @@ plt.show()
 ```{python, echo=T, out.width = '50%'}
 nem = pd.DataFrame({ 'from':['QLD', 'NSW', 'VIC','VIC'], 'to':['NSW', 'VIC', 'SA','TAS'], 
 'capacity':[1380,1770,495, 500]})
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = nem['capacity']/500, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -468,7 +468,7 @@ plt.show()
 
 
 ```{python,  echo=T, out.width = '50%'}
-nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, edge_color = nem['capacity']/500, pos= nx.nx.fruchterman_reingold_layout(G, seed=20))
+nx.draw(G, with_labels=True, node_size=2000, font_size=20, width = 6, edge_color = nem['capacity']/500, pos= nx.fruchterman_reingold_layout(G, seed=20))
 plt.show()
 ```
 
@@ -510,7 +510,7 @@ Gd=nx.from_pandas_edgelist(
 # Directed graph
 
 ```{python, echo=T, out.width='50%'}
-nx.draw(Gd, arrows=True, with_labels=True, node_size=2000, font_size=20, width = nem['flow']/100, pos= nx.nx.fruchterman_reingold_layout(Gd, seed=20))
+nx.draw(Gd, arrows=True, with_labels=True, node_size=2000, font_size=20, width = nem['flow']/100, pos= nx.fruchterman_reingold_layout(Gd, seed=20))
 plt.show()
 ```
 
